@@ -8,6 +8,12 @@ div#p1, div#p2 {
 	background-position: center;
 }
 
+#stats {
+	border: 1px solid blue;
+	width:800px;
+	height:25px;
+	position:fixed;
+}
 #playArea {
 	border:1px solid black;
 	margin-top: 50px;
@@ -16,16 +22,22 @@ div#p1, div#p2 {
 	position:fixed;
 }
 
+h3 {
+	position:absolute;
+	margin:0;
+}
+#p2hp {
+	left:770px;
+}
+
 #p1 {
 	position: absolute;
 	left:0px;
 }
-
 #p2 {
 	position: absolute;
 	left:750px;
 }
-
 #p1.image {
 	background-image: url('../img/kedar.jpg');
 }
