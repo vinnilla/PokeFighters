@@ -25,9 +25,10 @@ p2HP = document.getElementById('p2hp');
 
 //show starting hp
 updateHP();
+document.addEventListener('keydown', movement, false);
+document.addEventListener('keyup', collisionDetection, false);
 
-//movement
-document.addEventListener('keydown', function(e) {
+function movement(e) {
 	// d
 	if (e.keyCode == 68) {
 		testMove(p1, 'right');
@@ -44,10 +45,9 @@ document.addEventListener('keydown', function(e) {
 	else if (e.keyCode == 37) {
 		testMove(p2, 'left');
 	}
-}, false);
+}
 
-//collision detection and hitting + damage calc
-document.addEventListener('keyup', function(e) {
+function collisionDetection(e) {
 	//TODO change key layout for each palyer
 	// space
 	if (e.keyCode == 32) {
@@ -69,12 +69,15 @@ document.addEventListener('keyup', function(e) {
 			}
 		}
 	}
-}, false);
+}
 
 function knockOut(aggressor, defender) {
 	if (!defender.health) {
 		console.log(defender.timerid)
 		clearInterval(defender.timerid);
+		//remove event listeners
+		document.removeEventListener('keydown', movement);
+		document.removeEventListener('keyup', collisionDetection);
 		//ensure flashing interval is cleared
 		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
 	}
