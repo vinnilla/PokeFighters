@@ -39,8 +39,11 @@ h3 {
 	left:750px;
 }
 #p1.image {
-	background-image: url('../img/kedar.jpg');
+	background-image: url('https://placebear.com/g/200/300');
 }
 #p2.image {
-	background-image: url('../img/dan.jpg');
+	background-image: url('https://placebear.com/200/300');
+}
+.block {
+	background-color: purple;
 }

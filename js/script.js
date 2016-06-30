@@ -4,8 +4,12 @@ var p1 = {
 	health: 100,
 	damage: 10,
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px'],
-	counter: 0,
-	timerid: 0
+	position: 0,
+	timerid: 0,
+	combo: 0,
+	blockEnergy: 20,
+	block: false,
+	attackCD: 0
 }
 
 var p2 = {
@@ -13,8 +17,12 @@ var p2 = {
 	health: 100,
 	damage: 10,
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px'],
-	counter: 15,
-	timerid: 0
+	position: 15,
+	timerid: 0,
+	combo: 0,
+	blockEnergy: 20,
+	block: false,
+	attackCD: 0
 }
 
 //pointers to html elements
@@ -48,31 +56,66 @@ function movement(e) {
 }
 
 function collisionDetection(e) {
-	//TODO change key layout for each palyer
-	// space
-	if (e.keyCode == 32) {
+	//TODO change key layout for each player
+	//attack
+	// 1
+	if (e.keyCode == 49) {
 		//test collision
-		if (p1.counter+1 == p2.counter) {
-			//test hp of opponent
-			if (p2.health) {
+		if (p1.position+1 == p2.position) {
+			//test hp of opponent and attack cooldown
+			if (p2.health && p1.attackCD <= 0) {
 				p2.timerid = collide(p2HTML);
 				calcDamage(p1, p2);
 			}
 		}
 	}
-	//enter
-	else if (e.keyCode == 13) {
-		if (p2.counter-1 == p1.counter) {
-			if (p1.health) {
+	// .
+	else if (e.keyCode == 190) {
+		if (p2.position-1 == p1.position) {
+			if (p1.health && p2.attackCD <= 0) {
 				p1.timerid = collide(p1HTML);
 				calcDamage(p2, p1);
 			}
 		}
 	}
+
+	//block
+	// 2
+	else if (e.keyCode == 50) {
+		p1.block = true;
+		toggleBlock(p1HTML);
+		//make block false after 1 second
+		setTimeout(function() {
+			p1.block = false;
+			toggleBlock(p1HTML);
+		}, 1000);
+
+	}
+	// /
+	else if (e.keyCode == 191) {
+		p2.block = true;
+		console.log(p2.block);
+		toggleBlock(p2HTML);
+		//make block false after 1 second
+		setTimeout(function() {
+			p2.block = false;
+			toggleBlock(p2HTML);
+		}, 1000);
+		console.log(p2.block);
+	}
+}
+
+function toggleBlock(player) {
+	player.classList.toggle('image');
+	player.classList.toggle('block');
+}
+
+function resetBlock (player) {
+	player.block = false;
 }
 
 function knockOut(aggressor, defender) {
-	if (!defender.health) {
+	if (defender.health <= 0) {
 		console.log(defender.timerid)
 		clearInterval(defender.timerid);
 		//remove event listeners
@@ -85,10 +128,28 @@ function knockOut(aggressor, defender) {
 
 //TODO add blocking damage reduction
 function calcDamage(aggressor, defender){
-	defender.health -= aggressor.damage;
+	//check block
+	if (!defender.block) {
+		defender.health -= aggressor.damage;
+	}
+	else { //damage halved when block
+		defender.health -= aggressor.damage/2;
+	}
 	updateHP();
+	setAttackCD(aggressor);
 	//KO
 	knockOut(aggressor, defender);
+}
+
+function setAttackCD(aggressor, move) {
+	aggressor.attackCD = 1;
+	//reset attackCD to 0
+	var id = setInterval(function() {
+		aggressor.attackCD --;
+		if (aggressor.attackCD <=0) {
+			clearInterval(id);
+		}
+	}, 500);
 }
 
 function updateHP() {
@@ -111,33 +172,33 @@ function collide(playerHit) {
 function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
-		if (p1.x[p1.counter+1] != undefined && p1.counter+1 != p2.counter) {
-			p1.counter++;
-			p1HTML.style.left = p1.x[p1.counter];
+		if (p1.x[p1.position+1] != undefined && p1.position+1 != p2.position) {
+			p1.position++;
+			p1HTML.style.left = p1.x[p1.position];
 		}
 	}
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
-		if (p1.x[p1.counter-1] != undefined && p1.counter-1 != p2.counter) {
-			p1.counter--;
-			p1HTML.style.left = p1.x[p1.counter];
+		if (p1.x[p1.position-1] != undefined && p1.position-1 != p2.position) {
+			p1.position--;
+			p1HTML.style.left = p1.x[p1.position];
 		}
 	}
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
-		if (p2.x[p2.counter+1] != undefined && p2.counter+1 != p1.counter) {
-			p2.counter++;
-			p2HTML.style.left = p2.x[p2.counter];
+		if (p2.x[p2.position+1] != undefined && p2.position+1 != p1.position) {
+			p2.position++;
+			p2HTML.style.left = p2.x[p2.position];
 		} 
 	}
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
-		if (p2.x[p2.counter-1] != undefined && p2.counter+-1 != p1.counter) {
-			p2.counter--;
-			p2HTML.style.left = p2.x[p2.counter];
+		if (p2.x[p2.position-1] != undefined && p2.position+-1 != p1.position) {
+			p2.position--;
+			p2HTML.style.left = p2.x[p2.position];
 		} 
 	}
 }
