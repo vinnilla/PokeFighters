@@ -11,7 +11,8 @@ var p1 = {
 	combo: 0,
 	blockEnergy: 20,
 	block: false,
-	attackCD: 0
+	attackCD: 0,
+	blockCD: 0
 }
 
 var p2 = {
@@ -24,7 +25,8 @@ var p2 = {
 	combo: 0,
 	blockEnergy: 20,
 	block: false,
-	attackCD: 0
+	attackCD: 0,
+	blockCD: 0
 }
 
 //pointers to html elements
@@ -84,26 +86,33 @@ function collisionDetection(e) {
 	//block
 	// 2
 	else if (e.keyCode == 50) {
-		p1.block = true;
-		toggleBlock(p1HTML);
-		//make block false after 1 second
-		setTimeout(function() {
-			p1.block = false;
-			toggleBlock(p1HTML);
-		}, 1000);
-
+		block(p1, p1HTML);
 	}
 	// /
 	else if (e.keyCode == 191) {
-		p2.block = true;
-		console.log(p2.block);
-		toggleBlock(p2HTML);
+		block(p2, p2HTML);	
+	}
+}
+
+function block(player, html) {
+	if (player.blockCD <= 0) {
+		//3 second cd
+		player.blockCD = 3;
+		player.block = true;
+		toggleBlock(html);
 		//make block false after 1 second
 		setTimeout(function() {
-			p2.block = false;
-			toggleBlock(p2HTML);
+			player.block = false;
+			toggleBlock(html);
 		}, 1000);
-		console.log(p2.block);
+		console.log(player.block);
+		//countdown block cool down
+		var id = setInterval(function() {
+			player.blockCD--;
+			if (player.blockCD <= 0) {
+				clearInterval(id);
+			}
+		}, 1000);
 	}
 }
 
