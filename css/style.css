@@ -15,9 +15,8 @@ div#p1, div#p2 {
 	width: 300px;
 	height: 300px;
 	/*top:550px;*/
-	
 	background-size:100%;
-	
+	border-radius:100px;
 }
 
 #stats {
@@ -74,6 +73,14 @@ h3, h4 {
 #p2.evo1 {
 	background-image: url('../img/danbear.jpeg');
 }
-.block {
-	background-color: purple;
+
+#p1shield, #p2shield {
+	background-color: rgba(200,0,200,0.8);
+	border-radius:150px;
+	width:300px;
+	height:300px;
+}
+
+.hidden {
+	display:none;
 }

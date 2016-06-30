@@ -36,6 +36,8 @@ var p2 = {
 //pointers to html elements
 p1HTML = document.getElementById('p1');
 p2HTML = document.getElementById('p2');
+p1Shield = document.getElementById('p1shield');
+p2Shield = document.getElementById('p2shield');
 p1HP = document.getElementById('p1hp');
 p2HP = document.getElementById('p2hp');
 var $p1Combo = $('#p1combo');
@@ -130,11 +132,11 @@ function collisionDetection(e) {
 	//block
 	// 2
 	else if (e.keyCode == 50) {
-		block(p1, p1HTML);
+		block(p1, p1Shield);
 	}
 	// /
 	else if (e.keyCode == 191) {
-		block(p2, p2HTML);	
+		block(p2, p2Shield);	
 	}
 }
 
@@ -251,8 +253,7 @@ function block(player, html) {
 }
 
 function toggleBlock(player) {
-	player.classList.toggle('standard');
-	player.classList.toggle('block');
+	player.classList.toggle('hidden');
 }
 
 // ------------------------------------------ROUND END------------------------------------------ //
