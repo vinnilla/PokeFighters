@@ -1,6 +1,6 @@
 //create players
 var p1 = {
-	name: 'Keydar',
+	name: 'Squirtle',
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	position: 0,
 	health: 100,
@@ -70,7 +70,7 @@ function movement(e) {
 function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
-		if (p1.x[p1.position+6] != undefined && p1.position+6 != p2.position) {
+		if (p1.x[p1.position+1] != undefined && p1.position+6 != p2.position) {
 			p1.position++;
 			p1HTML.style.left = p1.x[p1.position];
 		}
@@ -78,7 +78,7 @@ function testMove(player, direction) {
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
-		if (p1.x[p1.position-6] != undefined && p1.position-6 != p2.position) {
+		if (p1.x[p1.position-1] != undefined && p1.position-6 != p2.position) {
 			p1.position--;
 			p1HTML.style.left = p1.x[p1.position];
 		}
@@ -86,7 +86,7 @@ function testMove(player, direction) {
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
-		if (p2.x[p2.position+6] != undefined && p2.position+6 != p1.position) {
+		if (p2.x[p2.position+1] != undefined && p2.position+6 != p1.position) {
 			p2.position++;
 			p2HTML.style.left = p2.x[p2.position];
 		} 
@@ -94,7 +94,7 @@ function testMove(player, direction) {
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
-		if (p2.x[p2.position-6] != undefined && p2.position-6 != p1.position) {
+		if (p2.x[p2.position-1] != undefined && p2.position-6 != p1.position) {
 			p2.position--;
 			p2HTML.style.left = p2.x[p2.position];
 		} 

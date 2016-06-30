@@ -12,7 +12,6 @@ body {
 }
 
 div#p1, div#p2 {
-	border: 1px solid black;
 	width: 300px;
 	height: 300px;
 	/*top:550px;*/
@@ -30,7 +29,6 @@ div#p1, div#p2 {
 	background-color: rgba(0,200,235,0.7);
 }
 #playArea {
-	border:1px solid black;
 	width:1366px;
 	height:300px;
 	position:absolute;
@@ -65,7 +63,7 @@ h3, h4 {
 
 /*character changes*/
 #p1.standard {
-	background-image: url('../img/kedar.jpg');
+	background-image: url('../img/squirtle.png');
 }
 #p2.standard {
 	background-image: url('../img/dan.jpg');

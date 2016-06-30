@@ -1,6 +1,7 @@
-<big><center>Street Fighter w/ Pokemon Starters</center></big>
+<big><center>PokeFighters</center></big>
 
-So far I only have 2 default boxes to check game mechanics. Animations and art have very low priority right now.
+![Image of Squirtle](img/squirtle.png)
+
 
 <big>Game Mechanics: </big>
 
