@@ -11,7 +11,7 @@ div#p1, div#p2 {
 #stats {
 	border: 1px solid blue;
 	width:800px;
-	height:25px;
+	height:35px;
 	position:fixed;
 }
 #playArea {
@@ -22,12 +22,16 @@ div#p1, div#p2 {
 	position:fixed;
 }
 
-h3 {
+h3, h4 {
 	position:absolute;
 	margin:0;
 }
-#p2hp {
+#p2hp, #p2combo {
 	left:770px;
+}
+
+#p1combo, #p2combo {
+	top: 20px;
 }
 
 #p1 {
@@ -38,11 +42,19 @@ h3 {
 	position: absolute;
 	left:750px;
 }
-#p1.image {
-	background-image: url('https://placebear.com/g/200/300');
+
+/*character changes*/
+#p1.standard {
+	background-image: url('../img/kedar.jpg');
 }
-#p2.image {
-	background-image: url('https://placebear.com/200/300');
+#p2.standard {
+	background-image: url('../img/dan.jpg');
+}
+#p1.evo1 {
+	background-image: url('../img/kedarbear.jpg');
+}
+#p2.evo1 {
+	background-image: url('../img/danbear.jpeg');
 }
 .block {
 	background-color: purple;
