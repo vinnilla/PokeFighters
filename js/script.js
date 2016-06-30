@@ -1,5 +1,3 @@
-//IDEAS
-
 //create players
 var p1 = {
 	name: 'Keydar',
@@ -8,6 +6,7 @@ var p1 = {
 	health: 100,
 	damage: 10,
 	attackCD: 0,
+	attackSpeed: 10,
 	combo: 0,
 	comboId: 0,
 	timerid: 0,
@@ -23,6 +22,7 @@ var p2 = {
 	health: 100,
 	damage: 10,
 	attackCD: 0,
+	attackSpeed: 10,
 	combo: 0,
 	comboId: 0,
 	timerid: 0,
@@ -154,17 +154,17 @@ function collide(playerHit) {
 function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 	//check block
 	if (!defender.block) {
+		//combo tracking -- only iterate combo if attack is not blocked
 		defender.health -= aggressor.damage;
+		aggressor.combo++;
+		clearInterval(aggressor.comboId);
+		aggressor.comboId = comboReset(aggressor);
+		evolution(aggressor, aggressorHTML);
 	}
 	else { //damage halved when block
 		defender.health -= aggressor.damage/2;
 	}
 	setAttackCD(aggressor);
-	//combo tracking
-	aggressor.combo++;
-	clearInterval(aggressor.comboId);
-	aggressor.comboId = comboReset(aggressor);
-	evolution(aggressor, aggressorHTML);
 	updateStats();
 	//KO
 	knockOut(aggressor, defender);
@@ -178,17 +178,18 @@ function setAttackCD(aggressor, move) {
 		if (aggressor.attackCD <=0) {
 			clearInterval(id);
 		}
-	}, 500);
+	}, 50*aggressor.attackSpeed);
+	console.log(aggressor.attackSpeed);
 }
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
 
 function comboReset(player) {
-	//reset combo after 5 seconds
+	//reset combo after 3 seconds
 	var id = setTimeout(function(){
 		player.combo = 0;
 		updateStats();
-	},5000);
+	},3000);
 	return id;
 }
 
@@ -196,6 +197,15 @@ function evolution(player, html) {
 	if (player.combo >=3) {
 		html.classList.remove('standard');
 		html.classList.add('evo1');
+		player.damage = 20;
+		player.attackSpeed = 5;
+		//reset evolution after 5 seconds
+		setTimeout(function(){
+			html.classList.remove('evo1');
+			html.classList.add('standard');
+			player.damage = 10;
+			player.attackSpeed = 10;
+		}, 5000);
 	}
 }
 
