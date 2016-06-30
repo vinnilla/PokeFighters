@@ -7,6 +7,16 @@
 * All functionality of the game is calculated and managed using the stats of the objects and necessary animations will translate into the DOM.
 * So far, the javascript is a mix of native javascript and JQuery but I plan on converting to fully utilize JQuery to ensure browser compatibility.
 
+##User Stories:
+* As a player, I want to be able to choose the starter pokemon I want to play as
+* As a player, I want to be able to move my pokemon
+* As a player, I want to be able to attack the opponent
+* As a player, I want to be able to defend from an opponent's attack
+* As a player, I want to see my pokemon's health and combo counter
+* As a player, I want to be able to keep track of how much time is left in the round
+* As a player, I want to see how many rounds I have already won in the best of 3/5
+* As a player, I want to see my pokemon move fluidly
+
 ##Game Mechanics:
 
 ###Default stats:
