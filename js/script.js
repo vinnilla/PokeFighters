@@ -1,3 +1,5 @@
+//IDEAS
+
 //create players
 var p1 = {
 	name: 'Keydar',
