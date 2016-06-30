@@ -37,19 +37,20 @@ var p2 = {
 }
 
 //pointers to html elements
-p1HTML = document.getElementById('p1');
-p2HTML = document.getElementById('p2');
-p1Shield = document.getElementById('p1shield');
-p2Shield = document.getElementById('p2shield');
-p1HP = document.getElementById('p1hp');
-p2HP = document.getElementById('p2hp');
+var p1HTML = $('#p1');
+var p2HTML = $('#p2');
+var p1Shield = $('#p1shield');
+var p2Shield = $('#p2shield');
+var p1HP = $('#p1hp');
+var p2HP = $('#p2hp');
 var $p1Combo = $('#p1combo');
 var $p2Combo = $('#p2combo');
+var $document = $(document);
 
 //show starting stats
 updateStats();
-document.addEventListener('keydown', movement, false);
-document.addEventListener('keyup', collisionDetection, false);
+$document.on('keydown', movement);
+$document.on('keyup', collisionDetection);
 
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
@@ -76,34 +77,35 @@ function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
 		if (p1.x[p1.position+1] != undefined && p1.position+6 != p2.position) {
-			p1.position++;
-			p1HTML.style.left = p1.x[p1.position];
+			move(p1, p1HTML, 1);
 		}
 	}
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
 		if (p1.x[p1.position-1] != undefined && p1.position-6 != p2.position) {
-			p1.position--;
-			p1HTML.style.left = p1.x[p1.position];
+			move(p1, p1HTML, -1);
 		}
 	}
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
 		if (p2.x[p2.position+1] != undefined && p2.position+6 != p1.position) {
-			p2.position++;
-			p2HTML.style.left = p2.x[p2.position];
+			move(p2, p2HTML, 1);
 		} 
 	}
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
 		if (p2.x[p2.position-1] != undefined && p2.position-6 != p1.position) {
-			p2.position--;
-			p2HTML.style.left = p2.x[p2.position];
+			move(p2, p2HTML, -1)
 		} 
 	}
+}
+
+function move(player, html, value) {
+	player.position += value;
+	html.css('left', player.x[player.position]);
 }
 
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
@@ -146,7 +148,7 @@ function collisionDetection(e) {
 function collide(playerHit) {
 		var timer = 3;
 		var timerId = window.setInterval(function(){
-			playerHit.classList.toggle('standard');
+			playerHit.toggle(0,'standard');
 			if (!timer) {
 				window.clearInterval(timerId);
 			}
@@ -208,14 +210,14 @@ function comboReset(player) {
 
 function evolution(player, html) {
 	if (player.combo >=3) {
-		html.classList.remove('standard');
-		html.classList.add('evo1');
+		html.removeClass('standard');
+		html.addClass('evo1');
 		//player.damage = 20;
 		player.attackSpeed = 5;
 		//reset evolution after 5 seconds
 		setTimeout(function(){
-			html.classList.remove('evo1');
-			html.classList.add('standard');
+			html.removeClass('evo1');
+			html.addClass('standard');
 			//player.damage = 10;
 			player.attackSpeed = 10;
 		}, 5000);
@@ -256,7 +258,7 @@ function block(player, html) {
 }
 
 function toggleBlock(player) {
-	player.classList.toggle('hidden');
+	player.toggle(0,'hidden');
 }
 
 // ------------------------------------------ROUND END------------------------------------------ //
@@ -266,8 +268,8 @@ function knockOut(aggressor, defender) {
 		console.log(defender.timerid)
 		clearInterval(defender.timerid);
 		//remove event listeners
-		document.removeEventListener('keydown', movement);
-		document.removeEventListener('keyup', collisionDetection);
+		$document.off('keydown', movement);
+		$document.off('keyup', collisionDetection);
 		//ensure flashing interval is cleared
 		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
 	}
@@ -275,8 +277,8 @@ function knockOut(aggressor, defender) {
 
 function updateStats() {
 	//hp
-	p1HP.innerHTML = p1.health;
-	p2HP.innerHTML = p2.health;
+	p1HP.text(p1.health);
+	p2HP.text(p2.health);
 	//combo
 	$p1Combo.text(p1.combo);
 	$p2Combo.text(p2.combo);
