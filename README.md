@@ -1,58 +1,62 @@
-<big><center>PokeFighters</center></big>
+#PokeFighters
 
 ![Image of Squirtle](img/squirtle.png)
 
 
-<big>Game Mechanics: </big>
+##Game Mechanics:
 
-Default stats: HP=100   BaseDamage=10   AttackSpeed=10   BlockStrength=10
-
-
-<big>Attack: P1 : 1 ___ P2 : .</big>
-
-Players must be colliding to attack. The player DPS is based on basedamage and attackspeed.
-
-<small>Combo:
-
-Combo resets after 3 seconds. This countdown will refresh with each hit.
-
-Reaching a 3rd consecutive hit will cause the first evolution -- attack speed doubles
-
-TOIMPLEMENT: Reaching a 6th consecutive hit will cause the second evolution -- damage doubles
-
-Evolution reverts after 5 seconds.
-</small>
+###Default stats:
+* HP=100
+* BaseDamage=10
+* AttackSpeed=10
+* BlockStrength=10
 
 
-<big>Block: P1 : 2 ___ P2 : /</big>
+##Attack:
+###P1 : (1)
+###P2 : (.)
+* Players must be colliding to attack. The player DPS is based on basedamage and attackspeed.
 
-When blocking, a player will receive reduced damage (based on blockstrength) and will not suffer from the stun effect.
+####Combo:
 
-However, blocking has a cooldown of 3 seconds. Use your blocks wisely.
-
-<big>Stun:</big>
-
-When hit, a player will be stunned for .25 seconds (cannot retaliate in that time.) However, the player can still block.
+* Combo resets after 3 seconds. This countdown will refresh with each hit.
+* Reaching a 3rd consecutive hit will cause the first evolution -- attack speed doubles
+* TODO: Reaching a 6th consecutive hit will cause the second evolution -- damage doubles
+* Evolution reverts after 5 seconds.
 
 
 
+##Block:
+###P1 : (2)
+###P2 : (/)
 
-<small>Planned Features (some may not be implemented in final product):
+* When blocking, a player will receive reduced damage (based on blockstrength) and will not suffer from the stun effect.
 
-Dan's Ideas: 
+* However, blocking has a cooldown of 3 seconds. Use your blocks wisely.
 
--combo 6 - evolve to final form (wartortle -> blastoise)
+####Stun:
 
-Combat:
+* When hit, a player will be stunned for .25 seconds (cannot retaliate in that time.) However, the player can still block.
 
--Separate attacks into high, normal and low -- probably implement crouching ability as well (attack while crouching to attack low and dodge high attacks at the same time)
 
-  high attacks -- vulnerable spot so more damage
 
-  low attacks -- faster, but less damage
 
-Movement:
+##Planned Features (some may not be implemented in final product):
 
--Jumping(???)
+###Dan's Ideas:
 
--dashing forward and backward to quickly engage/disengage</small>
+- [ ] combo 6 - evolve to final form (wartortle -> blastoise)
+
+###Combat:
+
+- [ ] Separate attacks into high, normal and low -- probably implement crouching ability as well (attack while crouching to attack low and dodge high attacks at the same time)
+
+    * high attacks -- vulnerable spot so more damage
+
+    * low attacks -- faster, but less damage
+
+###Movement:
+
+- [ ] Jumping(???)
+
+- [ ] dashing forward and backward to quickly engage/disengage
