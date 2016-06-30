@@ -1,7 +1,7 @@
 //create players
 var p1 = {
 	name: 'Keydar',
-	x: ['0px', '25px', '50px', '75px', '100px', '125px', '150px', '175px', '200px', '225px', '250px', '275px', '300px', '325px', '350px', '375px', '400px', '425px', '450px', '475px', '500px', '525px', '550px', '575px', '600px', '625px', '650px', '675px', '700px', '725px', '750px'],
+	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	position: 0,
 	health: 100,
 	damage: 10,
@@ -18,8 +18,8 @@ var p1 = {
 
 var p2 = {
 	name: 'Dan',
-	x: ['0px', '25px', '50px', '75px', '100px', '125px', '150px', '175px', '200px', '225px', '250px', '275px', '300px', '325px', '350px', '375px', '400px', '425px', '450px', '475px', '500px', '525px', '550px', '575px', '600px', '625px', '650px', '675px', '700px', '725px', '750px'],
-	position: 30,
+	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
+	position: 21,
 	health: 100,
 	damage: 10,
 	attackCD: 0,
@@ -70,7 +70,7 @@ function movement(e) {
 function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
-		if (p1.x[p1.position+2] != undefined && p1.position+2 != p2.position) {
+		if (p1.x[p1.position+6] != undefined && p1.position+6 != p2.position) {
 			p1.position++;
 			p1HTML.style.left = p1.x[p1.position];
 		}
@@ -78,7 +78,7 @@ function testMove(player, direction) {
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
-		if (p1.x[p1.position-2] != undefined && p1.position-2 != p2.position) {
+		if (p1.x[p1.position-6] != undefined && p1.position-6 != p2.position) {
 			p1.position--;
 			p1HTML.style.left = p1.x[p1.position];
 		}
@@ -86,7 +86,7 @@ function testMove(player, direction) {
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
-		if (p2.x[p2.position+2] != undefined && p2.position+2 != p1.position) {
+		if (p2.x[p2.position+6] != undefined && p2.position+6 != p1.position) {
 			p2.position++;
 			p2HTML.style.left = p2.x[p2.position];
 		} 
@@ -94,7 +94,7 @@ function testMove(player, direction) {
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
-		if (p2.x[p2.position-2] != undefined && p2.position-2 != p1.position) {
+		if (p2.x[p2.position-6] != undefined && p2.position-6 != p1.position) {
 			p2.position--;
 			p2HTML.style.left = p2.x[p2.position];
 		} 
@@ -109,7 +109,7 @@ function collisionDetection(e) {
 	// 1
 	if (e.keyCode == 49) {
 		//test collision
-		if (p1.position+2 == p2.position) {
+		if (p1.position+6 == p2.position) {
 			//test hp of opponent and attack cooldown and stun status
 			if (p2.health && checkStatus(p1)) {
 				p2.timerid = collide(p2HTML);
@@ -119,7 +119,7 @@ function collisionDetection(e) {
 	}
 	// .
 	else if (e.keyCode == 190) {
-		if (p2.position-2 == p1.position) {
+		if (p2.position-6 == p1.position) {
 			if (p1.health && checkStatus(p2)) {
 				p1.timerid = collide(p1HTML);
 				calcDamage(p2, p1, p2HTML, p1HTML);

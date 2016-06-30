@@ -1,40 +1,42 @@
-# wdi-project1
-
-Street Fighter w/ Pokemon Starters
+<big><center>Street Fighter w/ Pokemon Starters</center></big>
 
 So far I only have 2 default boxes to check game mechanics. Animations and art have very low priority right now.
 
-Game Mechanics: 
+<big>Game Mechanics: </big>
+
 Default stats: HP=100   BaseDamage=10   AttackSpeed=10   BlockStrength=10
 
-Attack: P1:1 ___ P2:.
+
+<big>Attack: P1 : 1 ___ P2 : .</big>
 
 Players must be colliding to attack. The player DPS is based on basedamage and attackspeed.
 
-	Combo:
+<small>Combo:
 
-	Combo resets after 3 seconds. This countdown will refresh with each hit.
+Combo resets after 3 seconds. This countdown will refresh with each hit.
 
-	Reaching a 3rd consecutive hit will cause the first evolution -- attack speed doubles
+Reaching a 3rd consecutive hit will cause the first evolution -- attack speed doubles
 
-	TOIMPLEMENT: Reaching a 6th consecutive hit will cause the second evolution -- damage doubles
+TOIMPLEMENT: Reaching a 6th consecutive hit will cause the second evolution -- damage doubles
 
-	Evolution reverts after 5 seconds.
+Evolution reverts after 5 seconds.
+</small>
 
-Block: P2:2 ___ P2:/
+
+<big>Block: P1 : 2 ___ P2 : /</big>
 
 When blocking, a player will receive reduced damage (based on blockstrength) and will not suffer from the stun effect.
 
 However, blocking has a cooldown of 3 seconds. Use your blocks wisely.
 
-Stun:
+<big>Stun:</big>
 
 When hit, a player will be stunned for .25 seconds (cannot retaliate in that time.) However, the player can still block.
 
 
 
 
-Planned Features (some may not be implemented in final product):
+<small>Planned Features (some may not be implemented in final product):
 
 Dan's Ideas: 
 
@@ -52,4 +54,4 @@ Movement:
 
 -Jumping(???)
 
--dashing forward and backward to quickly engage/disengage
+-dashing forward and backward to quickly engage/disengage</small>
