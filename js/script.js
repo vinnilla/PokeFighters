@@ -46,9 +46,13 @@ var p2HP = $('#p2hp');
 var $p1Combo = $('#p1combo');
 var $p2Combo = $('#p2combo');
 var $document = $(document);
+var $timer = $('#timer');
 
 //show starting stats
 updateStats();
+//start round timer
+startTimer();
+
 $document.on('keydown', movement);
 $document.on('keyup', collisionDetection);
 
@@ -262,6 +266,18 @@ function toggleBlock(player) {
 }
 
 // ------------------------------------------ROUND END------------------------------------------ //
+
+function startTimer() {
+	var timer = 180;
+	$timer.text(timer);
+	var id = setInterval(function() {
+		timer--;
+		$timer.text(timer);
+		if (timer <=0) {
+			clearInterval(id);
+		}
+	}, 1000);
+}
 
 function knockOut(aggressor, defender) {
 	if (defender.health <= 0) {

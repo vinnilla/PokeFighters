@@ -35,7 +35,8 @@ div#p1, div#p2 {
 	top: 200px;
 }
 
-h3, h4 {
+/*stat display*/
+h2, h3, h4 {
 	position:absolute;
 	margin:0;
 	font-size: 50px;
@@ -43,15 +44,17 @@ h3, h4 {
 #p2hp, #p2combo {
 	left:1100px;
 }
-
 #p1combo, #p2combo {
 	top: 40px;
 }
-
 #p2combo {
 	left:1150px;
 }
+#timer {
+	left: 500px;
+}
 
+/*character changes*/
 #p1 {
 	position: absolute;
 	left:0px;
@@ -60,8 +63,6 @@ h3, h4 {
 	position: absolute;
 	left:900px;
 }
-
-/*character changes*/
 #p1.standard {
 	background-image: url('../img/squirtle.png');
 }
