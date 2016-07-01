@@ -22,13 +22,13 @@ div#p1, div#p2 {
 	border-radius:100px;
 }
 
-#stats {
-	border: 1px solid blue;
+#stats {/*
+	border: 1px solid blue;*/
 	width:1199px;
 	height:100px;
 	position:absolute;
 	top:15px;
-	background-color: rgba(0,0,0,0.5);
+	/*background-color: rgba(0,0,0,0.5);*/
 	color: white;
 }
 #playArea {
@@ -52,29 +52,35 @@ h2, h4, div {
 	text-align: center;
 }
 #p1hpback, #p2hpback {
-	background-color: rgba(0,0,0,0.9);
+	background-color: rgba(0,0,0,0.7);
+	height: 25px;
+	width: 500px;
 }
-#p2hp {
+#p2hp, #p2hpback {
 	left: 698px;
-}
-#p2combo {
-	left:1150px;
+	/*transform: scaleX(-1);*/
 }
 #p1combo, #p2combo {
-	top: 30px;
+	top: 70px;
+	background-color: rgba(0,0,0,0.7);
+	font-size: 40px;
+}
+#p1combo {
+	left:5px;
 }
 #p2combo {
-	left:1175px;
+	left:1174px;
 }
 #timer {
 	left: 580px;
+	background-color:rgba(0,0,0,0.7);
 }
 #stats div.badge {
 	position:absolute;
 	width:35px;
 	height:35px;
 	background-color:rgba(0,0,0,0.75);
-	top:60px;
+	top:30px;
 }
 #p1badge1 {
 	left:5px;
@@ -83,10 +89,10 @@ h2, h4, div {
 	left:55px;
 }
 #p2badge1 {
-	left:1110px;
+	left:1160px;
 }
 #p2badge2 {
-	left:1160px;
+	left:1110px;
 }
 
 /*character changes*/

@@ -1,8 +1,6 @@
 //create players
 var p1 = {
 	name: 'Squirtle',
-	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
-	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
 	pNeutral: "url('img/squirtle.png')",
 	pWalk: "url('img/squirtle_walk.png')",
 	pAttack: "url('img/squirtle_attack.png')",
@@ -16,8 +14,8 @@ var p1 = {
 	nPosition: 0,
 	health: 100,
 	nHealth: 100,
-	damage: 10,
-	nDamage: 10,
+	damage: 5,
+	nDamage: 5,
 	attackSpeed: 10,
 	nAttackSpeed: 10,
 	attackCD: 0,
@@ -36,8 +34,6 @@ var p1 = {
 
 var p2 = {
 	name: 'Bear',
-	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
-	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
 	//position: 21,
 	pNeutral:"url('img/danbear.jpeg')",
 	pWalk:"url('img/danbear.jpeg')",
@@ -54,8 +50,8 @@ var p2 = {
 	nHealth: 100,
 	damage: 10,
 	nDamage: 10,
-	attackSpeed: 10,
-	nAttackSpeed: 10,
+	attackSpeed: 20,
+	nAttackSpeed: 20,
 	attackCD: 0,
 	stun:false,
 	combo: 0,
@@ -70,6 +66,10 @@ var p2 = {
 	badge2: $('#p2badge2')
 }
 
+
+// var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'];
+var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'];
+
 //pointers to html elements not specific to player
 var $document = $(document);
 var $timer = $('#timer');
@@ -78,7 +78,7 @@ var $timer = $('#timer');
 updateStats();
 neutralCSS(p1);
 //start round timer
-var timer = 180;
+var timer = 30;
 var timerID = startTimer();
 
 $document.on('keydown', movement);
@@ -108,28 +108,28 @@ function movement(e) {
 function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
-		if (p1.x[p1.position+1] != undefined && p1.position+6 != p2.position) {
+		if (x[p1.position+1] != undefined && p1.position+6 != p2.position) {
 			move(p1, 1);
 		}
 	}
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
-		if (p1.x[p1.position-1] != undefined && p1.position-6 != p2.position) {
+		if (x[p1.position-1] != undefined && p1.position-6 != p2.position) {
 			move(p1, -1);
 		}
 	}
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
-		if (p2.x[p2.position+1] != undefined && p2.position+6 != p1.position) {
+		if (x[p2.position+1] != undefined && p2.position+6 != p1.position) {
 			move(p2, 1);
 		} 
 	}
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
-		if (p2.x[p2.position-1] != undefined && p2.position-6 != p1.position) {
+		if (x[p2.position-1] != undefined && p2.position-6 != p1.position) {
 			move(p2, -1)
 		} 
 	}
@@ -137,8 +137,11 @@ function testMove(player, direction) {
 
 function move(player, value) {
 	player.position += value;
-	player.html.animate({left: player.x[player.position]}, 100);
-	neutralCSS(player);
+	player.html.animate({left: x[player.position]}, 100);
+	//conditional allows movement while blocking without changing the character model
+	if (!player.block) {
+		neutralCSS(player);
+	}
 }
 
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
@@ -254,17 +257,29 @@ function comboReset(player) {
 }
 
 function evolution(player) {
-	if (player.combo >=3) {
-		player.html.removeClass('standard');
-		player.html.addClass('evo1');
-		//player.damage = 20;
-		player.attackSpeed = 5;
+	if (player.combo >= 6) {
+		//double base damage
+		player.damage = player.nDamage*2;
+		console.log(player.damage);
+		setTimeout(function() {
+			//reset to base damage;
+			player.damage = player.nDamage;
+		}, 5000)
+	}
+	else if (player.combo >=3) {
+		//replace with changing css background image to whatever image
+		// player.html.removeClass('standard');
+		// player.html.addClass('evo1');
+		//double base attack speed
+		player.attackSpeed = player.nAttackSpeed/2;
+		console.log(player.attackSpeed);
 		//reset evolution after 5 seconds
 		setTimeout(function(){
-			player.html.removeClass('evo1');
-			player.html.addClass('standard');
-			//player.damage = 10;
-			player.attackSpeed = 10;
+			//same as above
+			// player.html.removeClass('evo1');
+			// player.html.addClass('standard');
+			//reset to base attack speed
+			player.attackSpeed = player.nAttackSpeed;
 		}, 5000);
 	}
 }
@@ -328,6 +343,8 @@ function updateStats() {
 	p1.$hp.css('width', 5*(p1.health));
 	p2.$hp.text(p2.health);
 	p2.$hp.css('width', 5*(p2.health));
+	//makes it so hp bar shifts right as it shrinks
+	p2.$hp.css('left', 698+5*(p2.nHealth-p2.health));
 	//combo
 	p1.$combo.text(p1.combo);
 	p2.$combo.text(p2.combo);
@@ -360,7 +377,7 @@ function resetGame(p1, p2) {
 	//reset timer
 	clearInterval(timerID);
 	//start timer and show stats
-	timer = 180;
+	timer = 30;
 	timerID = startTimer();
 	updateStats();
 	//shift models back
@@ -370,6 +387,8 @@ function resetGame(p1, p2) {
 	$document.on('keydown', movement);
 	$document.on('keyup', collisionDetection);
 }
+
+//TODO call this function every second
 
 function knockOut(aggressor, defender) {
 	if (defender.health <= 0) {
@@ -382,6 +401,10 @@ function knockOut(aggressor, defender) {
 		//add badge
 		addBadge(aggressor);
 		aggressor.wins++;
+		resetGame(p1, p2);
+	}
+	else if ($timer.text() == 0) {
+		alert('No one wins the round.');
 		resetGame(p1, p2);
 	}
 }
