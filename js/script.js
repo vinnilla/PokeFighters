@@ -39,6 +39,11 @@ var p2 = {
 	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
 	//position: 21,
+	pNeutral:"url('img/danbear.jpeg')",
+	pWalk:"url('img/danbear.jpeg')",
+	pAttack:"url('img/danbear.jpeg')",
+	pBlock:"url('img/danbear.jpeg')",
+	pFlinch:"url('img/danbear.jpeg')",
 	html: $('#p2'),
 	shield: $('#p2shield'),
 	$hp: $('#p2hp'),
@@ -59,7 +64,10 @@ var p2 = {
 	blockStrength: 2,
 	nBlockStrength: 2,
 	block: false,
-	blockCD: 0
+	blockCD: 0,
+	wins: 0,
+	badge1: $('#p2badge1'),
+	badge2: $('#p2badge2')
 }
 
 //pointers to html elements not specific to player
@@ -317,7 +325,9 @@ function startTimer() {
 function updateStats() {
 	//hp
 	p1.$hp.text(p1.health);
+	p1.$hp.css('width', 5*(p1.health));
 	p2.$hp.text(p2.health);
+	p2.$hp.css('width', 5*(p2.health));
 	//combo
 	p1.$combo.text(p1.combo);
 	p2.$combo.text(p2.combo);
