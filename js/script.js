@@ -24,11 +24,13 @@ var p1 = {
 	nBlockStrength: 2,
 	block: false,
 	blockCD: 0,
-	wins: 0
+	wins: 0,
+	badge1: $('#p1badge1'),
+	badge2: $('#p1badge2')
 }
 
 var p2 = {
-	name: 'Dan',
+	name: 'Bear',
 	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
 	//position: 21,
@@ -204,7 +206,6 @@ function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 	//change css
 	//TEMPORARY check for p1
 	if (aggressor.name == 'Squirtle') {
-		console.log('attacking');
 		aggressorHTML.css('width', '350px');
 		aggressorHTML.css('background-image', aggressor.pAttack);
 		setTimeout(function() {
@@ -226,7 +227,6 @@ function setAttackCD(aggressor, move) {
 			clearInterval(id);
 		}
 	}, 50*aggressor.attackSpeed);
-	console.log(aggressor.attackSpeed);
 }
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
@@ -281,7 +281,6 @@ function block(player, shieldhtml, playerhtml) {
 			//toggleBlock(shieldhtml);
 			neutralCSS(player, playerhtml);
 		}, 1000);
-		console.log(player.block);
 		//countdown block cool down
 		var id = setInterval(function() {
 			player.blockCD--;
@@ -357,14 +356,26 @@ function resetGame(p1, p2, p1html, p2html) {
 
 function knockOut(aggressor, defender) {
 	if (defender.health <= 0) {
-		console.log(defender.timerid)
 		clearInterval(defender.timerid);
 		//remove event listeners
 		$document.off('keydown', movement);
 		$document.off('keyup', collisionDetection);
 		//ensure flashing interval is cleared
-		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name + '\n New Round starting in 3 seconds.');}, 500);
+		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
+		//add badge
+		addBadge(aggressor);
+		aggressor.wins++;
 		resetGame(p1, p2, p1HTML, p2HTML);
+	}
+}
+
+function addBadge(winner) {
+	winner.wins++;
+	if (winner.wins == 1) {
+		winner.badge1.css('background-color', 'rgba(150,150,0,0.75)');
+	}
+	else {
+		winner.badge2.css('background-color', 'rgba(150,150,0,0.75)');
 	}
 }
 

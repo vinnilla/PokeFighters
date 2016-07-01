@@ -27,7 +27,7 @@ div#p1, div#p2 {
 	width:1199px;
 	height:100px;
 	position:absolute;
-	top:50px;
+	top:15px;
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 }
@@ -42,19 +42,38 @@ div#p1, div#p2 {
 h2, h3, h4 {
 	position:absolute;
 	margin:0;
-	font-size: 50px;
+	font-size: 25px;
 }
 #p2hp, #p2combo {
-	left:1100px;
-}
-#p1combo, #p2combo {
-	top: 40px;
-}
-#p2combo {
 	left:1150px;
 }
+#p1combo, #p2combo {
+	top: 30px;
+}
+#p2combo {
+	left:1175px;
+}
 #timer {
-	left: 500px;
+	left: 565px;
+}
+#stats div {
+	position:absolute;
+	width:35px;
+	height:35px;
+	background-color:rgba(0,0,0,0.75);
+	top:60px;
+}
+#p1badge1 {
+	left:5px;
+}
+#p1badge2 {
+	left:55px;
+}
+#p2badge1 {
+	left:1110px;
+}
+#p2badge2 {
+	left:1160px;
 }
 
 /*character changes*/
@@ -76,7 +95,9 @@ h2, h3, h4 {
 	background-image: url('../img/kedarbear.jpg');
 }
 #p2.evo1 {
-	background-image: url('../img/kedarbear.jpeg');
+	background-image: url('../img/kedarbear.jpg');
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 #p1shield, #p2shield {
