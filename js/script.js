@@ -210,7 +210,7 @@ function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 		aggressorHTML.css('background-image', aggressor.pAttack);
 		setTimeout(function() {
 			neutralCSS(aggressor, aggressorHTML);
-		},500);
+		},50*aggressor.attackSpeed);
 	}
 	setAttackCD(aggressor);
 	updateStats();
@@ -376,6 +376,8 @@ function addBadge(winner) {
 	}
 	else {
 		winner.badge2.css('background-color', 'rgba(150,150,0,0.75)');
+		alert(winner.name + ' wins the best of three! The page will now reload.')
+		location.reload();
 	}
 }
 
