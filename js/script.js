@@ -3,6 +3,10 @@ var p1 = {
 	name: 'Squirtle',
 	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
+	pNeutral: "url('img/squirtle.png')",
+	pWalk: "url('img/squirtle_walk.png')",
+	pAttack: "url('img/squirtle_attack.png')",
+	pBlock: "url('img/squirtle_block.png')",
 	position: 0,
 	nPosition: 0,
 	health: 100,
@@ -61,6 +65,7 @@ var $timer = $('#timer');
 
 //show starting stats
 updateStats();
+neutralCSS(p1, p1HTML);
 //start round timer
 var timer = 180;
 var timerID = startTimer();
@@ -121,7 +126,8 @@ function testMove(player, direction) {
 
 function move(player, html, value) {
 	player.position += value;
-	html.css('left', player.x[player.position]);
+	html.animate({left: player.x[player.position]}, 100);
+	neutralCSS(player,html);
 }
 
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
@@ -153,11 +159,11 @@ function collisionDetection(e) {
 	//block
 	// 2
 	else if (e.keyCode == 50) {
-		block(p1, p1Shield);
+		block(p1, p1Shield, p1HTML);
 	}
 	// /
 	else if (e.keyCode == 191) {
-		block(p2, p2Shield);	
+		block(p2, p2Shield, p2HTML);	
 	}
 }
 
@@ -194,6 +200,16 @@ function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 	}
 	else { //damage halved when block
 		defender.health -= aggressor.damage/defender.blockStrength;
+	}
+	//change css
+	//TEMPORARY check for p1
+	if (aggressor.name == 'Squirtle') {
+		console.log('attacking');
+		aggressorHTML.css('width', '350px');
+		aggressorHTML.css('background-image', aggressor.pAttack);
+		setTimeout(function() {
+			neutralCSS(aggressor, aggressorHTML);
+		},500);
 	}
 	setAttackCD(aggressor);
 	updateStats();
@@ -251,16 +267,19 @@ function stun(defender) {
 
 // ------------------------------------------BLOCKING------------------------------------------ //
 
-function block(player, html) {
+function block(player, shieldhtml, playerhtml) {
 	if (player.blockCD <= 0) {
 		//3 second cd
 		player.blockCD = 3;
 		player.block = true;
-		toggleBlock(html);
+		//change css
+		//toggleBlock(shieldhtml);
+		playerhtml.css('background-image', player.pBlock);
 		//make block false after 1 second
 		setTimeout(function() {
 			player.block = false;
-			toggleBlock(html);
+			//toggleBlock(shieldhtml);
+			neutralCSS(player, playerhtml);
 		}, 1000);
 		console.log(player.block);
 		//countdown block cool down
@@ -346,5 +365,21 @@ function knockOut(aggressor, defender) {
 		//ensure flashing interval is cleared
 		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name + '\n New Round starting in 3 seconds.');}, 500);
 		resetGame(p1, p2, p1HTML, p2HTML);
+	}
+}
+
+// ------------------------------------------ANIMATION------------------------------------------ //
+
+function neutralCSS(player,html) {
+	//check if p1 -- will be removed when p2 also has images
+	if (player == p1) {
+		//check if even position
+		if (player.position%2 == 0) {
+			html.css('background-image',player.pNeutral);
+		}
+		else {
+			html.css('background-image',player.pWalk);
+		}
+		html.css('width', '300px');
 	}
 }

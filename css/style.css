@@ -66,17 +66,17 @@ h2, h3, h4 {
 	position: absolute;
 	left:900px;
 }
-#p1.standard {
-	background-image: url('../img/squirtle.png');
-}
+/*#p1.standard {
+	background: url('../img/squirtle.png');
+}*/
 #p2.standard {
-	background-image: url('../img/dan.jpg');
+	background-image: url('../img/danbear.jpeg');
 }
 #p1.evo1 {
 	background-image: url('../img/kedarbear.jpg');
 }
 #p2.evo1 {
-	background-image: url('../img/danbear.jpeg');
+	background-image: url('../img/kedarbear.jpeg');
 }
 
 #p1shield, #p2shield {
