@@ -7,6 +7,11 @@ var p1 = {
 	pWalk: "url('img/squirtle_walk.png')",
 	pAttack: "url('img/squirtle_attack.png')",
 	pBlock: "url('img/squirtle_block.png')",
+	pFlinch: "url('img/squirtle_flinch.png')",
+	html: $('#p1'),
+	shield: $('#p1shield'),
+	$hp: $('#p1hp'),
+	$combo: $('#p1combo'),
 	position: 0,
 	nPosition: 0,
 	health: 100,
@@ -19,7 +24,7 @@ var p1 = {
 	stun: false,
 	combo: 0,
 	comboId: 0,
-	timerid: 0,
+	//timerid: 0,
 	blockStrength: 2,
 	nBlockStrength: 2,
 	block: false,
@@ -34,6 +39,10 @@ var p2 = {
 	// x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'],
 	x: ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'],
 	//position: 21,
+	html: $('#p2'),
+	shield: $('#p2shield'),
+	$hp: $('#p2hp'),
+	$combo: $('#p2combo'),
 	position: 18,
 	nPosition: 18,
 	health: 100,
@@ -46,28 +55,20 @@ var p2 = {
 	stun:false,
 	combo: 0,
 	comboId: 0,
-	timerid: 0,
+	//timerid: 0,
 	blockStrength: 2,
 	nBlockStrength: 2,
 	block: false,
 	blockCD: 0
 }
 
-//pointers to html elements
-var p1HTML = $('#p1');
-var p2HTML = $('#p2');
-var p1Shield = $('#p1shield');
-var p2Shield = $('#p2shield');
-var p1HP = $('#p1hp');
-var p2HP = $('#p2hp');
-var $p1Combo = $('#p1combo');
-var $p2Combo = $('#p2combo');
+//pointers to html elements not specific to player
 var $document = $(document);
 var $timer = $('#timer');
 
 //show starting stats
 updateStats();
-neutralCSS(p1, p1HTML);
+neutralCSS(p1);
 //start round timer
 var timer = 180;
 var timerID = startTimer();
@@ -100,36 +101,36 @@ function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
 		if (p1.x[p1.position+1] != undefined && p1.position+6 != p2.position) {
-			move(p1, p1HTML, 1);
+			move(p1, 1);
 		}
 	}
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
 		if (p1.x[p1.position-1] != undefined && p1.position-6 != p2.position) {
-			move(p1, p1HTML, -1);
+			move(p1, -1);
 		}
 	}
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
 		if (p2.x[p2.position+1] != undefined && p2.position+6 != p1.position) {
-			move(p2, p2HTML, 1);
+			move(p2, 1);
 		} 
 	}
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
 		if (p2.x[p2.position-1] != undefined && p2.position-6 != p1.position) {
-			move(p2, p2HTML, -1)
+			move(p2, -1)
 		} 
 	}
 }
 
-function move(player, html, value) {
+function move(player, value) {
 	player.position += value;
-	html.animate({left: player.x[player.position]}, 100);
-	neutralCSS(player,html);
+	player.html.animate({left: player.x[player.position]}, 100);
+	neutralCSS(player);
 }
 
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
@@ -143,8 +144,8 @@ function collisionDetection(e) {
 		if (p1.position+6 == p2.position) {
 			//test hp of opponent and attack cooldown and stun status
 			if (p2.health && checkStatus(p1)) {
-				p2.timerid = collide(p2HTML);
-				calcDamage(p1, p2, p1HTML, p2HTML);
+				//p2.timerid = collide(p2);
+				calcDamage(p1, p2);
 			}
 		}
 	}
@@ -152,8 +153,8 @@ function collisionDetection(e) {
 	else if (e.keyCode == 190) {
 		if (p2.position-6 == p1.position) {
 			if (p1.health && checkStatus(p2)) {
-				p1.timerid = collide(p1HTML);
-				calcDamage(p2, p1, p2HTML, p1HTML);
+				//p1.timerid = collide(p1);
+				calcDamage(p2, p1);
 			}
 		}
 	}
@@ -161,25 +162,25 @@ function collisionDetection(e) {
 	//block
 	// 2
 	else if (e.keyCode == 50) {
-		block(p1, p1Shield, p1HTML);
+		block(p1);
 	}
 	// /
 	else if (e.keyCode == 191) {
-		block(p2, p2Shield, p2HTML);	
+		block(p2);	
 	}
 }
 
-function collide(playerHit) {
-		var timer = 3;
-		var timerId = window.setInterval(function(){
-			playerHit.toggle(0,'standard');
-			if (!timer) {
-				window.clearInterval(timerId);
-			}
-			timer --;
-		}, 250)
-		return timerId;
-};
+// function collide(playerHit) {
+// 		var timer = 3;
+// 		var timerId = window.setInterval(function(){
+// 			playerHit.html.toggle(0,'standard');
+// 			if (!timer) {
+// 				window.clearInterval(timerId);
+// 			}
+// 			timer --;
+// 		}, 250)
+// 		return timerId;
+// };
 
 function checkStatus(player) {
 	return (player.attackCD <= 0 && !player.stun);
@@ -188,7 +189,7 @@ function checkStatus(player) {
 // ------------------------------------------ATTACKING------------------------------------------ //
 
 //TODO add blocking damage reduction
-function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
+function calcDamage(aggressor, defender){
 	//check block
 	if (!defender.block) {
 		//combo tracking -- only iterate combo if attack is not blocked
@@ -196,9 +197,13 @@ function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 		aggressor.combo++;
 		clearInterval(aggressor.comboId);
 		aggressor.comboId = comboReset(aggressor);
-		evolution(aggressor, aggressorHTML);
+		evolution(aggressor);
 		//stun defender if attack isn't blocked
 		stun(defender);
+		defender.html.css('background-image', defender.pFlinch);
+		setTimeout(function() {
+			neutralCSS(defender);
+		},250)
 	}
 	else { //damage halved when block
 		defender.health -= aggressor.damage/defender.blockStrength;
@@ -206,10 +211,10 @@ function calcDamage(aggressor, defender, aggressorHTML, defenderHTML){
 	//change css
 	//TEMPORARY check for p1
 	if (aggressor.name == 'Squirtle') {
-		aggressorHTML.css('width', '350px');
-		aggressorHTML.css('background-image', aggressor.pAttack);
+		aggressor.html.css('width', '350px');
+		aggressor.html.css('background-image', aggressor.pAttack);
 		setTimeout(function() {
-			neutralCSS(aggressor, aggressorHTML);
+			neutralCSS(aggressor);
 		},50*aggressor.attackSpeed);
 	}
 	setAttackCD(aggressor);
@@ -240,16 +245,16 @@ function comboReset(player) {
 	return id;
 }
 
-function evolution(player, html) {
+function evolution(player) {
 	if (player.combo >=3) {
-		html.removeClass('standard');
-		html.addClass('evo1');
+		player.html.removeClass('standard');
+		player.html.addClass('evo1');
 		//player.damage = 20;
 		player.attackSpeed = 5;
 		//reset evolution after 5 seconds
 		setTimeout(function(){
-			html.removeClass('evo1');
-			html.addClass('standard');
+			player.html.removeClass('evo1');
+			player.html.addClass('standard');
 			//player.damage = 10;
 			player.attackSpeed = 10;
 		}, 5000);
@@ -267,19 +272,19 @@ function stun(defender) {
 
 // ------------------------------------------BLOCKING------------------------------------------ //
 
-function block(player, shieldhtml, playerhtml) {
+function block(player) {
 	if (player.blockCD <= 0) {
 		//3 second cd
 		player.blockCD = 3;
 		player.block = true;
 		//change css
-		//toggleBlock(shieldhtml);
-		playerhtml.css('background-image', player.pBlock);
+		//toggleBlock(player.shield);
+		player.html.css('background-image', player.pBlock);
 		//make block false after 1 second
 		setTimeout(function() {
 			player.block = false;
-			//toggleBlock(shieldhtml);
-			neutralCSS(player, playerhtml);
+			//toggleBlock(player.shield);
+			neutralCSS(player);
 		}, 1000);
 		//countdown block cool down
 		var id = setInterval(function() {
@@ -291,9 +296,9 @@ function block(player, shieldhtml, playerhtml) {
 	}
 }
 
-function toggleBlock(player) {
-	player.toggle(0,'hidden');
-}
+// function toggleBlock(player) {
+// 	player.toggle(0,'hidden');
+// }
 
 // ------------------------------------------ROUND END------------------------------------------ //
 
@@ -311,14 +316,14 @@ function startTimer() {
 
 function updateStats() {
 	//hp
-	p1HP.text(p1.health);
-	p2HP.text(p2.health);
+	p1.$hp.text(p1.health);
+	p2.$hp.text(p2.health);
 	//combo
-	$p1Combo.text(p1.combo);
-	$p2Combo.text(p2.combo);
+	p1.$combo.text(p1.combo);
+	p2.$combo.text(p2.combo);
 }
 
-function resetGame(p1, p2, p1html, p2html) {
+function resetGame(p1, p2) {
 	//reset position
 	p1.position = p1.nPosition;
 	p2.position = p2.nPosition;
@@ -338,8 +343,10 @@ function resetGame(p1, p2, p1html, p2html) {
 	p2.damage = p2.nDamage;
 	p1.blockStrength = p1.nBlockStrength;
 	p2.blockStrength = p2.nBlockStrength;
-	p1html.removeClass('evo1').addClass('standard');
-	p2html.removeClass('evo1').addClass('standard');
+	p1.html.removeClass('evo1');
+	p2.html.removeClass('evo1');
+	neutralCSS(p1);
+	neutralCSS(p2);
 	//reset timer
 	clearInterval(timerID);
 	//start timer and show stats
@@ -347,8 +354,8 @@ function resetGame(p1, p2, p1html, p2html) {
 	timerID = startTimer();
 	updateStats();
 	//shift models back
-	move(p1, p1HTML, 0)
-	move(p2, p2HTML, 0)
+	move(p1, 0);
+	move(p2, 0);
 
 	$document.on('keydown', movement);
 	$document.on('keyup', collisionDetection);
@@ -365,7 +372,7 @@ function knockOut(aggressor, defender) {
 		//add badge
 		addBadge(aggressor);
 		aggressor.wins++;
-		resetGame(p1, p2, p1HTML, p2HTML);
+		resetGame(p1, p2);
 	}
 }
 
@@ -383,16 +390,16 @@ function addBadge(winner) {
 
 // ------------------------------------------ANIMATION------------------------------------------ //
 
-function neutralCSS(player,html) {
+function neutralCSS(player) {
 	//check if p1 -- will be removed when p2 also has images
 	if (player == p1) {
 		//check if even position
 		if (player.position%2 == 0) {
-			html.css('background-image',player.pNeutral);
+			player.html.css('background-image',player.pNeutral);
 		}
 		else {
-			html.css('background-image',player.pWalk);
+			player.html.css('background-image',player.pWalk);
 		}
-		html.css('width', '300px');
+		player.html.css('width', '300px');
 	}
 }
