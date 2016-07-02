@@ -14,17 +14,6 @@ body {
 	top: 0; bottom: 0; left: 0; right: 0;
 }
 
-div#p1, div#p2 {
-	width: 300px;
-	height: 300px;
-	/*top:550px;*/
-	background-size:100%;
-	border-radius:100px;
-}
-#p2 {
-	transform: scaleX(-1);
-}
-
 #stats {/*
 	border: 1px solid blue;*/
 	width:1199px;
@@ -99,13 +88,20 @@ h2, h4, div {
 }
 
 /*character changes*/
-#p1 {
+div#p1, div#p2 {
+	width: 300px;
+	height: 300px;
+	/*top:550px;*/
+	background-size:100%;
+/*	border-radius:100px;*/
 	position: absolute;
+}
+#p1 {
 	left:0px;
 }
 #p2 {
-	position: absolute;
 	left:900px;
+	transform: scaleX(-1);
 }
 /*#p1.standard {
 	background: url('../img/squirtle.png');

@@ -36,10 +36,10 @@ var p2 = {
 	name: 'Charmander',
 	//position: 21,
 	pNeutral:"url('img/charmander.png')",
-	pWalk:"url('img/charmander.png')",
-	pAttack:"url('img/charmander.png')",
-	pBlock:"url('img/charmander.png')",
-	pFlinch:"url('img/charmander.png')",
+	pWalk:"url('img/charmander walk.png')",
+	pAttack:"url('img/charmander attack.png')",
+	pBlock:"url('img/charmander block.png')",
+	pFlinch:"url('img/charmander flinch.png')",
 	html: $('#p2'),
 	shield: $('#p2shield'),
 	$hp: $('#p2hp'),
@@ -212,27 +212,35 @@ function calcDamage(aggressor, defender){
 		evolution(aggressor);
 		//stun defender if attack isn't blocked
 		stun(defender);
-		defender.html.css('background-image', defender.pFlinch);
-		setTimeout(function() {
-			neutralCSS(defender);
-		},250)
+		if (defender.attack != true) {
+			defender.html.css('background-image', defender.pFlinch);
+			setTimeout(function() {
+				neutralCSS(defender);
+			},250)	
+		}
 	}
 	else { //damage halved when block
 		defender.health -= aggressor.damage/defender.blockStrength;
 	}
 	//change css
-	//TEMPORARY check for p1
-	if (aggressor.name == 'Squirtle') {
-		aggressor.html.css('width', '350px');
-		aggressor.html.css('background-image', aggressor.pAttack);
-		aggressor.html.css('z-index', 1);
-		setTimeout(function() {
-			//if player blocks right after attacking, the neutralcss function will not reset the block animation
-			if (!aggressor.block) {
-				neutralCSS(aggressor);
-			}
-		},50*aggressor.attackSpeed);
+	aggressor.html.css('width', '350px');
+	aggressor.html.css('background-image', aggressor.pAttack);
+	aggressor.html.css('z-index', 1);
+	aggressor.attack = true;
+	if (aggressor == p2) {
+		aggressor.html.css('left', parseInt(aggressor.html.css('left'))-50);
 	}
+	setTimeout(function() {
+		//if player blocks right after attacking, the neutralcss function will not reset the block animation
+		if (!aggressor.block) {
+			neutralCSS(aggressor);
+			if (aggressor == p2) {
+				aggressor.html.css('left', parseInt(aggressor.html.css('left'))+50);
+			}
+		}
+		aggressor.attack = false;
+
+	},50*aggressor.attackSpeed);
 	setAttackCD(aggressor);
 	updateStats();
 	//KO
@@ -357,9 +365,6 @@ function updateStats() {
 }
 
 function resetGame(p1, p2) {
-	//reset position
-	p1.position = p1.nPosition;
-	p2.position = p2.nPosition;
 	//reset health
 	p1.health = p1.nHealth;
 	p2.health = p2.nHealth;
@@ -380,6 +385,9 @@ function resetGame(p1, p2) {
 	p2.html.removeClass('evo1');
 	neutralCSS(p1);
 	neutralCSS(p2);
+	//reset position
+	p1.position = p1.nPosition;
+	p2.position = p2.nPosition;
 	//reset timer
 	clearInterval(timerID);
 	//start timer and show stats
@@ -403,7 +411,7 @@ function knockOut(aggressor, defender) {
 		$document.off('keydown', movement);
 		$document.off('keyup', collisionDetection);
 		//ensure flashing interval is cleared
-		setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
+		//setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
 		//add badge
 		addBadge(aggressor);
 		aggressor.wins++;
@@ -433,6 +441,7 @@ function addBadge(winner) {
 // ------------------------------------------ANIMATION------------------------------------------ //
 
 function neutralCSS(player) {
+	player.html.css('width', '300px');
 	//check if even position
 	if (player.position%2 == 0) {
 		player.html.css('background-image',player.pNeutral);
@@ -440,5 +449,5 @@ function neutralCSS(player) {
 	else {
 		player.html.css('background-image',player.pWalk);
 	}
-	player.html.css('width', '300px');
+
 }
