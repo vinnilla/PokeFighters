@@ -33,13 +33,13 @@ var p1 = {
 }
 
 var p2 = {
-	name: 'Bear',
+	name: 'Charmander',
 	//position: 21,
-	pNeutral:"url('img/danbear.jpeg')",
-	pWalk:"url('img/danbear.jpeg')",
-	pAttack:"url('img/danbear.jpeg')",
-	pBlock:"url('img/danbear.jpeg')",
-	pFlinch:"url('img/danbear.jpeg')",
+	pNeutral:"url('img/charmander.png')",
+	pWalk:"url('img/charmander.png')",
+	pAttack:"url('img/charmander.png')",
+	pBlock:"url('img/charmander.png')",
+	pFlinch:"url('img/charmander.png')",
 	html: $('#p2'),
 	shield: $('#p2shield'),
 	$hp: $('#p2hp'),
@@ -77,6 +77,7 @@ var $timer = $('#timer');
 //show starting stats
 updateStats();
 neutralCSS(p1);
+neutralCSS(p2);
 //start round timer
 var timer = 30;
 var timerID = startTimer();
@@ -224,8 +225,12 @@ function calcDamage(aggressor, defender){
 	if (aggressor.name == 'Squirtle') {
 		aggressor.html.css('width', '350px');
 		aggressor.html.css('background-image', aggressor.pAttack);
+		aggressor.html.css('z-index', 1);
 		setTimeout(function() {
-			neutralCSS(aggressor);
+			//if player blocks right after attacking, the neutralcss function will not reset the block animation
+			if (!aggressor.block) {
+				neutralCSS(aggressor);
+			}
 		},50*aggressor.attackSpeed);
 	}
 	setAttackCD(aggressor);
@@ -330,6 +335,7 @@ function startTimer() {
 	var id = setInterval(function() {
 		timer--;
 		$timer.text(timer);
+		checkTimer();
 		if (timer <=0) {
 			clearInterval(id);
 		}
@@ -403,7 +409,10 @@ function knockOut(aggressor, defender) {
 		aggressor.wins++;
 		resetGame(p1, p2);
 	}
-	else if ($timer.text() == 0) {
+}
+
+function checkTimer() {
+	if ($timer.text() == 0) {
 		alert('No one wins the round.');
 		resetGame(p1, p2);
 	}
@@ -424,15 +433,12 @@ function addBadge(winner) {
 // ------------------------------------------ANIMATION------------------------------------------ //
 
 function neutralCSS(player) {
-	//check if p1 -- will be removed when p2 also has images
-	if (player == p1) {
-		//check if even position
-		if (player.position%2 == 0) {
-			player.html.css('background-image',player.pNeutral);
-		}
-		else {
-			player.html.css('background-image',player.pWalk);
-		}
-		player.html.css('width', '300px');
+	//check if even position
+	if (player.position%2 == 0) {
+		player.html.css('background-image',player.pNeutral);
 	}
+	else {
+		player.html.css('background-image',player.pWalk);
+	}
+	player.html.css('width', '300px');
 }

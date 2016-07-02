@@ -21,6 +21,9 @@ div#p1, div#p2 {
 	background-size:100%;
 	border-radius:100px;
 }
+#p2 {
+	transform: scaleX(-1);
+}
 
 #stats {/*
 	border: 1px solid blue;*/
@@ -107,9 +110,9 @@ h2, h4, div {
 /*#p1.standard {
 	background: url('../img/squirtle.png');
 }*/
-#p2.standard {
+/*#p2.standard {
 	background-image: url('../img/danbear.jpeg');
-}
+}*/
 #p1.evo1 {
 	background-image: url('../img/kedarbear.jpg');
 }
