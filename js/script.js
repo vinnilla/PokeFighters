@@ -19,10 +19,11 @@ var p1 = {
 	attackSpeed: 10,
 	nAttackSpeed: 10,
 	attackCD: 0,
+	attack: false,
 	stun: false,
 	combo: 0,
 	comboId: 0,
-	//timerid: 0,
+	attackLock: 0,
 	blockStrength: 2,
 	nBlockStrength: 2,
 	block: false,
@@ -53,10 +54,11 @@ var p2 = {
 	attackSpeed: 20,
 	nAttackSpeed: 20,
 	attackCD: 0,
+	attack: false,
 	stun:false,
 	combo: 0,
 	comboId: 0,
-	//timerid: 0,
+	attackLock: 0,
 	blockStrength: 2,
 	nBlockStrength: 2,
 	block: false,
@@ -79,30 +81,38 @@ updateStats();
 neutralCSS(p1);
 neutralCSS(p2);
 //start round timer
-var timer = 30;
+var timer = 90;
 var timerID = startTimer();
 
 $document.on('keydown', movement);
-$document.on('keyup', collisionDetection);
+$document.on('keyup', combat);
 
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
 function movement(e) {
 	// d
 	if (e.keyCode == 68) {
-		testMove(p1, 'right');
+		if (!p1.attack) {
+			testMove(p1, 'right');
+		}
 	}
 	// a
 	else if (e.keyCode == 65) {
-		testMove(p1, 'left');
+		if (!p1.attack) {
+			testMove(p1, 'left');	
+		}
 	}
 	// ->
 	else if (e.keyCode == 39) {
-		testMove(p2, 'right');
+		if (!p2.attack) {
+			testMove(p2, 'right');
+		}
 	}
 	// <-
 	else if (e.keyCode == 37) {
-		testMove(p2, 'left');
+		if (!p2.attack) {
+			testMove(p2, 'left');
+		}
 	}
 }
 
@@ -147,28 +157,16 @@ function move(player, value) {
 
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
 
-function collisionDetection(e) {
+function combat(e) {
 	//TODO change key layout for each player
 	//attack
 	// 1
 	if (e.keyCode == 49) {
-		//test collision
-		if (p1.position+6 == p2.position) {
-			//test hp of opponent and attack cooldown and stun status
-			if (p2.health && checkStatus(p1)) {
-				//p2.timerid = collide(p2);
-				calcDamage(p1, p2);
-			}
-		}
+		attack(p1, p2);
 	}
 	// .
 	else if (e.keyCode == 190) {
-		if (p2.position-6 == p1.position) {
-			if (p1.health && checkStatus(p2)) {
-				//p1.timerid = collide(p1);
-				calcDamage(p2, p1);
-			}
-		}
+		attack(p2, p1);
 	}
 
 	//block
@@ -182,17 +180,19 @@ function collisionDetection(e) {
 	}
 }
 
-// function collide(playerHit) {
-// 		var timer = 3;
-// 		var timerId = window.setInterval(function(){
-// 			playerHit.html.toggle(0,'standard');
-// 			if (!timer) {
-// 				window.clearInterval(timerId);
-// 			}
-// 			timer --;
-// 		}, 250)
-// 		return timerId;
-// };
+function testCollision(attacker) {
+	if (attacker == p1) {
+		if (p1.position+6 == p2.position) {
+			return true;
+		}
+	}
+	else {
+		if (p1.position == p2.position-6) {
+			return true;
+		}
+	}
+	
+}
 
 function checkStatus(player) {
 	return (player.attackCD <= 0 && !player.stun);
@@ -201,50 +201,61 @@ function checkStatus(player) {
 // ------------------------------------------ATTACKING------------------------------------------ //
 
 //TODO add blocking damage reduction
-function calcDamage(aggressor, defender){
-	//check block
-	if (!defender.block) {
-		//combo tracking -- only iterate combo if attack is not blocked
-		defender.health -= aggressor.damage;
-		aggressor.combo++;
-		clearInterval(aggressor.comboId);
-		aggressor.comboId = comboReset(aggressor);
-		evolution(aggressor);
-		//stun defender if attack isn't blocked
-		stun(defender);
-		if (defender.attack != true) {
-			defender.html.css('background-image', defender.pFlinch);
-			setTimeout(function() {
-				neutralCSS(defender);
-			},250)	
+function attack(aggressor, defender){
+	//check attack cooldown and stun status
+	if (checkStatus(aggressor)) {
+		
+		//show animation
+		//change css
+		aggressor.html.css('width', '350px');
+		aggressor.html.css('background-image', aggressor.pAttack);
+		aggressor.html.css('z-index', 1);
+		aggressor.attack = true;
+		if (aggressor == p2) {
+			aggressor.html.css('left', parseInt(aggressor.html.css('left'))-50);
 		}
-	}
-	else { //damage halved when block
-		defender.health -= aggressor.damage/defender.blockStrength;
-	}
-	//change css
-	aggressor.html.css('width', '350px');
-	aggressor.html.css('background-image', aggressor.pAttack);
-	aggressor.html.css('z-index', 1);
-	aggressor.attack = true;
-	if (aggressor == p2) {
-		aggressor.html.css('left', parseInt(aggressor.html.css('left'))-50);
-	}
-	setTimeout(function() {
-		//if player blocks right after attacking, the neutralcss function will not reset the block animation
-		if (!aggressor.block) {
+		//attacking creates animation lock
+		aggressor.attackLock = setTimeout(function() {
 			neutralCSS(aggressor);
 			if (aggressor == p2) {
 				aggressor.html.css('left', parseInt(aggressor.html.css('left'))+50);
 			}
-		}
-		aggressor.attack = false;
+			aggressor.attack = false;
 
-	},50*aggressor.attackSpeed);
-	setAttackCD(aggressor);
-	updateStats();
-	//KO
-	knockOut(aggressor, defender);
+		},50*aggressor.attackSpeed);
+		setAttackCD(aggressor);
+
+
+		//check collision -- only on collision does damage apply
+		if (testCollision(aggressor)) {
+			//check hp of opponent
+			if (defender.health) {
+				//check block
+				if (!defender.block) {
+					//combo tracking -- only iterate combo if attack is not blocked
+					defender.health -= aggressor.damage;
+					aggressor.combo++;
+					clearInterval(aggressor.comboId);
+					aggressor.comboId = comboReset(aggressor);
+					//evolution(aggressor);
+					//stun defender if attack isn't blocked
+					stun(defender);
+					if (defender.attack != true) {
+						defender.html.css('background-image', defender.pFlinch);
+						setTimeout(function() {
+							neutralCSS(defender);
+						},250)	
+					}
+				}
+				else { //damage halved when block
+					defender.health -= aggressor.damage/defender.blockStrength;
+				}
+				updateStats();
+				//check KO
+				knockOut(aggressor, defender);
+			}
+		}
+	}	
 }
 
 function setAttackCD(aggressor, move) {
@@ -309,7 +320,7 @@ function stun(defender) {
 // ------------------------------------------BLOCKING------------------------------------------ //
 
 function block(player) {
-	if (player.blockCD <= 0) {
+	if (player.blockCD <= 0 && player.attack == false) {
 		//3 second cd
 		player.blockCD = 3;
 		player.block = true;
@@ -365,6 +376,16 @@ function updateStats() {
 }
 
 function resetGame(p1, p2) {
+	//reset position
+	p1.position = p1.nPosition;
+	p2.position = p2.nPosition;
+	neutralCSS(p1);
+	neutralCSS(p2);
+	clearTimeout(p1.attackLock);
+	clearTimeout(p2.attackLock);
+	//shift models back
+	move(p1, 0);
+	move(p2, 0);
 	//reset health
 	p1.health = p1.nHealth;
 	p2.health = p2.nHealth;
@@ -383,23 +404,16 @@ function resetGame(p1, p2) {
 	p2.blockStrength = p2.nBlockStrength;
 	p1.html.removeClass('evo1');
 	p2.html.removeClass('evo1');
-	neutralCSS(p1);
-	neutralCSS(p2);
-	//reset position
-	p1.position = p1.nPosition;
-	p2.position = p2.nPosition;
 	//reset timer
 	clearInterval(timerID);
 	//start timer and show stats
-	timer = 30;
+	timer = 90;
 	timerID = startTimer();
 	updateStats();
-	//shift models back
-	move(p1, 0);
-	move(p2, 0);
+	
 
 	$document.on('keydown', movement);
-	$document.on('keyup', collisionDetection);
+	$document.on('keyup', combat);
 }
 
 //TODO call this function every second
@@ -409,7 +423,7 @@ function knockOut(aggressor, defender) {
 		clearInterval(defender.timerid);
 		//remove event listeners
 		$document.off('keydown', movement);
-		$document.off('keyup', collisionDetection);
+		$document.off('keyup', combat);
 		//ensure flashing interval is cleared
 		//setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
 		//add badge
@@ -422,6 +436,9 @@ function knockOut(aggressor, defender) {
 function checkTimer() {
 	if ($timer.text() == 0) {
 		alert('No one wins the round.');
+		//remove event listeners
+		$document.off('keydown', movement);
+		$document.off('keyup', combat);
 		resetGame(p1, p2);
 	}
 }
