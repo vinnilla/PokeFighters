@@ -9,16 +9,18 @@ var p1 = {
 	pQuickAttack1: "url('img/squirtle bite.png')",
 	pQuickAttack2: "url('img/squirtle bite 2.png')",
 	html: $('#p1'),
+	model: $('.normal').eq(0),
+	evo1: $('.evolve1').eq(0),
+	evo2: $('.evolve2').eq(0),
 	// shield: $('#p1shield'),
 	$hp: $('#p1hp'),
 	$combo: $('#p1combo'),
-	$evo1: $('.evolve1').eq(0),
 	position: 0,
 	nPosition: 0,
 	health: 100,
 	nHealth: 100,
-	qDamage: 2.5,
-	nqDamage: 2.5,
+	qDamage: 5,
+	nqDamage: 5,
 	sequence: 0,
 	damage: 5,
 	nDamage: 5,
@@ -27,6 +29,7 @@ var p1 = {
 	attackCD: 0,
 	attack: false,
 	stun: false,
+	stunID: 0,
 	combo: 0,
 	comboId: 0,
 	attackLock: 0,
@@ -50,6 +53,9 @@ var p2 = {
 	pQuickAttack1: "url('img/charmander scratch 1.png')",
 	pQuickAttack2: "url('img/charmander scratch 2.png')",
 	html: $('#p2'),
+	model: $('.normal').eq(1),
+	evo1: $('.evolve1').eq(1),
+	evo2: $('.evolve2').eq(1),
 	// shield: $('#p2shield'),
 	$hp: $('#p2hp'),
 	$combo: $('#p2combo'),
@@ -60,13 +66,14 @@ var p2 = {
 	qDamage: 5,
 	nqDamage: 5,
 	sequence: 0,
-	damage: 10,
-	nDamage: 10,
+	damage: 5,
+	nDamage: 5,
 	attackSpeed: 20,
 	nAttackSpeed: 20,
 	attackCD: 0,
 	attack: false,
 	stun:false,
+	stunID: 0,
 	combo: 0,
 	comboId: 0,
 	attackLock: 0,
@@ -159,7 +166,8 @@ function testMove(player, direction) {
 
 function move(player, value) {
 	player.position += value;
-	player.html.animate({left: x[player.position]}, 100);
+	player.model.animate({left: x[player.position]}, 100);
+	player.evo1.css('left', x[player.position]);
 	//conditional allows movement while blocking without changing the character model
 	if (!player.block) {
 		neutralCSS(player);
@@ -227,25 +235,25 @@ function attack(aggressor, defender, type){
 	if (checkStatus(aggressor)) {
 		//show animation
 		//change css
-		aggressor.html.css('width', '386px');
+		aggressor.model.css('width', '386px');
 		if (type == 'strong') {
-			aggressor.html.css('background-image', aggressor.pAttack);	
+			aggressor.model.css('background-image', aggressor.pAttack);	
 		}
 		else {
 			if (aggressor.sequence == 0) {
-				aggressor.html.css('background-image', aggressor.pQuickAttack1);
+				aggressor.model.css('background-image', aggressor.pQuickAttack1);
 				aggressor.sequence++;
 			}
 			else {
-				aggressor.html.css('background-image', aggressor.pQuickAttack2);
+				aggressor.model.css('background-image', aggressor.pQuickAttack2);
 				aggressor.sequence--;
 			}
 		}
-		defender.html.css('z-index', 1)
-		aggressor.html.css('z-index', 2);
+		defender.model.css('z-index', 1)
+		aggressor.model.css('z-index', 2);
 		aggressor.attack = true;
 		if (aggressor == p2) {
-			aggressor.html.css('left', parseInt(aggressor.html.css('left'))-100);
+			aggressor.model.css('left', parseInt(aggressor.model.css('left'))-100);
 		}
 		//attacking creates animation lock
 		var timeout = 0;
@@ -258,7 +266,7 @@ function attack(aggressor, defender, type){
 		aggressor.attackLock = setTimeout(function() {
 			neutralCSS(aggressor);
 			if (aggressor == p2) {
-				aggressor.html.css('left', parseInt(aggressor.html.css('left'))+100);
+				aggressor.model.css('left', parseInt(aggressor.model.css('left'))+100);
 			}
 			aggressor.attack = false;
 
@@ -281,17 +289,13 @@ function attack(aggressor, defender, type){
 					aggressor.combo++;
 					// taking damage will reset
 					defender.combo = 0;
+					defender.evo1.addClass('hidden');
 					// clearInterval(aggressor.comboId);
 					// aggressor.comboId = comboReset(aggressor);
 					evolution(aggressor);
 					//stun defender if attack isn't blocked
 					stun(defender, aggressor.attackSpeed);
-					if (defender.attack != true) {
-						defender.html.css('background-image', defender.pFlinch);
-						setTimeout(function() {
-							neutralCSS(defender);
-						},50*aggressor.attackSpeed)	
-					}
+					
 				}
 				else { //damage halved when block
 					if (type == 'strong') {
@@ -332,31 +336,39 @@ function setAttackCD(aggressor, time) {
 // }
 
 function evolution(player) {
+	clearTimeout(player.comboID);
 	if (player.combo >= 6) {
-		//double base damage
-		player.damage = player.nDamage*2;
-		// console.log(player.damage);
-		setTimeout(function() {
+		//3x base damage
+		player.damage = player.nDamage*3;
+		player.evo1.addClass('hidden');
+		player.evo2.removeClass('hidden');
+		console.log(player.damage);
+		player.comboID = setTimeout(function() {
 			//reset to base damage;
 			player.damage = player.nDamage;
+			payer.evo2.addClass('hidden');
+			player.combo = 0;
+			updateStats();
 		}, 5000)
 	}
 	else if (player.combo >=3) {
 		//replace with changing css background image to whatever image
 		// player.html.removeClass('standard');
 		// player.html.addClass('evo1');
-		//1.5x base damage
-		player.damage = player.nDamage*1.5;
-		player.$evo1.removeClass('hidden');
-		console.log(player.attackSpeed);
+		//2x base damage
+		player.damage = player.nDamage*2;
+		player.evo1.removeClass('hidden');
+		console.log(player.damage);
 		//reset evolution after 5 seconds
-		setTimeout(function(){
+		player.comboID = setTimeout(function(){
 			//same as above
 			// player.html.removeClass('evo1');
 			// player.html.addClass('standard');
 			//reset to base attack speed
 			player.damage = player.nDamage;
-			player.$evo1.addClass('hidden');
+			player.evo1.addClass('hidden');
+			player.combo = 0;
+			updateStats();
 		}, 5000);
 	}
 }
@@ -364,10 +376,15 @@ function evolution(player) {
 // ------------------------------------------ATTACK EFFECTS------------------------------------------ //
 
 function stun(defender, rate) {
-	defender.stun = true;
-	setTimeout(function() {
-		defender.stun = false;
-	},50*rate);
+	clearTimeout(defender.stunID);
+	if (defender.attack != true) {
+		defender.stun = true;
+		defender.model.css('background-image', defender.pFlinch);
+		defender.stunID = setTimeout(function() {
+			defender.stun = false;
+			neutralCSS(defender);
+		},50*rate)	
+	}
 }
 
 // ------------------------------------------BLOCKING------------------------------------------ //
@@ -379,7 +396,7 @@ function block(player) {
 		player.block = true;
 		//change css
 		//toggleBlock(player.shield);
-		player.html.css('background-image', player.pBlock);
+		player.model.css('background-image', player.pBlock);
 		//make block false after 1 second
 		setTimeout(function() {
 			player.block = false;
@@ -448,6 +465,7 @@ function resetGame(p1, p2) {
 	p1.combo = p2.combo = 0;
 	p1.block = p2.block = false;
 	p1.blockCD = p2.blockCD = 0;
+	p1.attack = p2.attack = false;
 	//reset stat changes due to evolution
 	p1.attackSpeed = p1.nAttackSpeed;
 	p2.attackSpeed = p2.nAttackSpeed;
@@ -455,8 +473,12 @@ function resetGame(p1, p2) {
 	p2.damage = p2.nDamage;
 	p1.blockStrength = p1.nBlockStrength;
 	p2.blockStrength = p2.nBlockStrength;
-	p1.html.removeClass('evo1');
-	p2.html.removeClass('evo1');
+	p1.evo1.addClass('hidden');
+	p2.evo1.addClass('hidden');
+	p1.evo2.addClass('hidden');
+	p2.evo2.addClass('hidden');
+	// p1.html.removeClass('evo1');
+	// p2.html.removeClass('evo1');
 	//reset timer
 	clearInterval(timerID);
 	//start timer and show stats
@@ -511,13 +533,13 @@ function addBadge(winner) {
 // ------------------------------------------ANIMATION------------------------------------------ //
 
 function neutralCSS(player) {
-	player.html.css('width', '300px');
+	player.model.css('width', '300px');
 	//check if even position
 	if (player.position%2 == 0) {
-		player.html.css('background-image',player.pNeutral);
+		player.model.css('background-image',player.pNeutral);
 	}
 	else {
-		player.html.css('background-image',player.pWalk);
+		player.model.css('background-image',player.pWalk);
 	}
 
 }

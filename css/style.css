@@ -88,7 +88,7 @@ h2, h4, div {
 }
 
 /*character changes*/
-div#p1, div#p2 {
+#p1 .normal, #p2 .normal{
 	width: 300px;
 	height: 300px;
 	/*top:550px;*/
@@ -97,10 +97,10 @@ div#p1, div#p2 {
 	position: absolute;
 	z-index: 1;
 }
-#p1 {
+#p1 .normal {
 	left:0px;
 }
-#p2 {
+#p2 .normal {
 	left:900px;
 	transform: scaleX(-1);
 }
@@ -110,30 +110,41 @@ div#p1, div#p2 {
 /*#p2.standard {
 	background-image: url('../img/danbear.jpeg');
 }*/
-.evolve1 {
+.evolve1, .evolve2 {
 	width: 300px;
-	height: 400px;
 	position: relative;
-	bottom: 0px;
+	bottom: 100px;
 	left: 50px;
-	z-index: -1;
+	z-index: 1;
 	opacity: 0.5;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.evolve1 {
+	height: 400px;
+}
+.evolve2 {
+	height: 500px;
 }
 #p1 .evolve1 {
 	background-image: url('../img/wartortle.png');
 }
-#p2.evo1 {
+#p1 .evolve2 {
+	background-image: url('../img/wartortle.png');
+}
+#p2.evolve1 {
 	background-image: url('../img/kedarbear.jpg');
-	background-repeat: no-repeat;
-	background-position: center;
+}
+#p2.evolve2 {
+	background-image: url('../img/kedarbear.jpg');
 }
 
-#p1shield, #p2shield {
+/*#p1shield, #p2shield {
 	background-color: rgba(200,0,200,0.8);
 	border-radius:150px;
 	width:300px;
 	height:300px;
-}
+}*/
 
 .hidden {
 	display:none;
