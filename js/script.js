@@ -14,6 +14,9 @@ var p1 = {
 	nPosition: 0,
 	health: 100,
 	nHealth: 100,
+	qDamage: 2.5,
+	nqDamage: 2.5,
+	sequence: 0,
 	damage: 5,
 	nDamage: 5,
 	attackSpeed: 10,
@@ -24,8 +27,8 @@ var p1 = {
 	combo: 0,
 	comboId: 0,
 	attackLock: 0,
-	blockStrength: 2,
-	nBlockStrength: 2,
+	blockStrength: 5,
+	nBlockStrength: 5,
 	block: false,
 	blockCD: 0,
 	wins: 0,
@@ -41,6 +44,8 @@ var p2 = {
 	pAttack:"url('img/charmander attack.png')",
 	pBlock:"url('img/charmander block.png')",
 	pFlinch:"url('img/charmander flinch.png')",
+	pQuickAttack1: "url('img/charmander scratch 1.png')",
+	pQuickAttack2: "url('img/charmander scratch 2.png')",
 	html: $('#p2'),
 	shield: $('#p2shield'),
 	$hp: $('#p2hp'),
@@ -49,6 +54,9 @@ var p2 = {
 	nPosition: 18,
 	health: 100,
 	nHealth: 100,
+	qDamage: 5,
+	nqDamage: 5,
+	sequence: 0,
 	damage: 10,
 	nDamage: 10,
 	attackSpeed: 20,
@@ -59,8 +67,8 @@ var p2 = {
 	combo: 0,
 	comboId: 0,
 	attackLock: 0,
-	blockStrength: 2,
-	nBlockStrength: 2,
+	blockStrength: 4,
+	nBlockStrength: 4,
 	block: false,
 	blockCD: 0,
 	wins: 0,
@@ -119,28 +127,28 @@ function movement(e) {
 function testMove(player, direction) {
 	//p1 moving right
 	if (player == p1 && direction == 'right') {
-		if (x[p1.position+1] != undefined && p1.position+6 != p2.position) {
+		if (x[p1.position+1] != undefined && p1.position+7 != p2.position) {
 			move(p1, 1);
 		}
 	}
 
 	//p1 moving left
 	else if (player == p1 && direction == 'left') {
-		if (x[p1.position-1] != undefined && p1.position-6 != p2.position) {
+		if (x[p1.position-1] != undefined && p1.position-7 != p2.position) {
 			move(p1, -1);
 		}
 	}
 
 	//p2 moving right
 	else if (player == p2 && direction == 'right') {
-		if (x[p2.position+1] != undefined && p2.position+6 != p1.position) {
+		if (x[p2.position+1] != undefined && p2.position+7 != p1.position) {
 			move(p2, 1);
 		} 
 	}
 
 	//p2 moving left
 	else if (player == p2 && direction == 'left') {
-		if (x[p2.position-1] != undefined && p2.position-6 != p1.position) {
+		if (x[p2.position-1] != undefined && p2.position-7 != p1.position) {
 			move(p2, -1)
 		} 
 	}
@@ -159,35 +167,45 @@ function move(player, value) {
 
 function combat(e) {
 	//TODO change key layout for each player
-	//attack
+	//quick attack
 	// 1
 	if (e.keyCode == 49) {
-		attack(p1, p2);
+		attack(p1, p2, 'quick');
+	}
+	// ,
+	if (e.keyCode == 188) {
+		attack(p2, p1, 'quick');
+	}
+
+	//strong attack
+	// 2
+	if (e.keyCode == 50) {
+		attack(p1, p2, 'strong');
 	}
 	// .
-	else if (e.keyCode == 190) {
-		attack(p2, p1);
+	if (e.keyCode == 190) {
+		attack(p2, p1, 'strong');
 	}
 
 	//block
-	// 2
-	else if (e.keyCode == 50) {
+	// 3
+	if (e.keyCode == 51) {
 		block(p1);
 	}
 	// /
-	else if (e.keyCode == 191) {
+	if (e.keyCode == 191) {
 		block(p2);	
 	}
 }
 
 function testCollision(attacker) {
 	if (attacker == p1) {
-		if (p1.position+6 == p2.position) {
+		if (p1.position+7 == p2.position) {
 			return true;
 		}
 	}
 	else {
-		if (p1.position == p2.position-6) {
+		if (p1.position == p2.position-7) {
 			return true;
 		}
 	}
@@ -201,30 +219,48 @@ function checkStatus(player) {
 // ------------------------------------------ATTACKING------------------------------------------ //
 
 //TODO add blocking damage reduction
-function attack(aggressor, defender){
+function attack(aggressor, defender, type){
 	//check attack cooldown and stun status
 	if (checkStatus(aggressor)) {
-		
 		//show animation
 		//change css
-		aggressor.html.css('width', '350px');
-		aggressor.html.css('background-image', aggressor.pAttack);
+		aggressor.html.css('width', '386px');
+		if (type == 'strong') {
+			aggressor.html.css('background-image', aggressor.pAttack);	
+		}
+		else {
+			if (aggressor.sequence == 0) {
+				aggressor.html.css('background-image', aggressor.pQuickAttack1);
+				aggressor.sequence++;
+			}
+			else {
+				aggressor.html.css('background-image', aggressor.pQuickAttack2);
+				aggressor.sequence--;
+			}
+		}
+		defender.html.css('z-index', 0)
 		aggressor.html.css('z-index', 1);
 		aggressor.attack = true;
 		if (aggressor == p2) {
-			aggressor.html.css('left', parseInt(aggressor.html.css('left'))-50);
+			aggressor.html.css('left', parseInt(aggressor.html.css('left'))-100);
 		}
 		//attacking creates animation lock
+		var timeout = 0;
+		if (type == 'strong') {
+			timeout = 50;
+		}
+		else {
+			timeout = 25;
+		}
 		aggressor.attackLock = setTimeout(function() {
 			neutralCSS(aggressor);
 			if (aggressor == p2) {
-				aggressor.html.css('left', parseInt(aggressor.html.css('left'))+50);
+				aggressor.html.css('left', parseInt(aggressor.html.css('left'))+100);
 			}
 			aggressor.attack = false;
 
-		},50*aggressor.attackSpeed);
-		setAttackCD(aggressor);
-
+		},timeout*aggressor.attackSpeed);
+		setAttackCD(aggressor, timeout);
 
 		//check collision -- only on collision does damage apply
 		if (testCollision(aggressor)) {
@@ -232,8 +268,13 @@ function attack(aggressor, defender){
 			if (defender.health) {
 				//check block
 				if (!defender.block) {
+					if (type == 'strong') {
+						defender.health -= aggressor.damage;
+					}
+					else {
+						defender.health -= aggressor.qDamage;
+					}
 					//combo tracking -- only iterate combo if attack is not blocked
-					defender.health -= aggressor.damage;
 					aggressor.combo++;
 					clearInterval(aggressor.comboId);
 					aggressor.comboId = comboReset(aggressor);
@@ -248,7 +289,12 @@ function attack(aggressor, defender){
 					}
 				}
 				else { //damage halved when block
-					defender.health -= aggressor.damage/defender.blockStrength;
+					if (type == 'strong') {
+						defender.health -= aggressor.damage/defender.blockStrength;
+					}
+					else {
+						defender.health -= aggressor.qDamage/defender.blockStrength;
+					}
 				}
 				updateStats();
 				//check KO
@@ -258,7 +304,7 @@ function attack(aggressor, defender){
 	}	
 }
 
-function setAttackCD(aggressor, move) {
+function setAttackCD(aggressor, time) {
 	aggressor.attackCD = 1;
 	//reset attackCD to 0
 	var id = setInterval(function() {
@@ -266,7 +312,7 @@ function setAttackCD(aggressor, move) {
 		if (aggressor.attackCD <=0) {
 			clearInterval(id);
 		}
-	}, 50*aggressor.attackSpeed);
+	}, time*aggressor.attackSpeed);
 }
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
