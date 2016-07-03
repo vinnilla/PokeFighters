@@ -492,10 +492,10 @@ function checkTimer() {
 function addBadge(winner) {
 	winner.wins++;
 	if (winner.wins == 1) {
-		winner.badge1.css('background-color', 'rgba(150,150,0,0.75)');
+		winner.badge1.css('background-image', "url('img/badge.png')");
 	}
 	else {
-		winner.badge2.css('background-color', 'rgba(150,150,0,0.75)');
+		winner.badge2.css('background-image', "url('img/badge.png')");
 		alert(winner.name + ' wins the best of three! The page will now reload.')
 		location.reload();
 	}
