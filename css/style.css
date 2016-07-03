@@ -95,6 +95,7 @@ div#p1, div#p2 {
 	background-size:100%;
 /*	border-radius:100px;*/
 	position: absolute;
+	z-index: 1;
 }
 #p1 {
 	left:0px;
@@ -109,8 +110,17 @@ div#p1, div#p2 {
 /*#p2.standard {
 	background-image: url('../img/danbear.jpeg');
 }*/
-#p1.evo1 {
-	background-image: url('../img/kedarbear.jpg');
+.evolve1 {
+	width: 300px;
+	height: 400px;
+	position: relative;
+	bottom: 0px;
+	left: 50px;
+	z-index: -1;
+	opacity: 0.5;
+}
+#p1 .evolve1 {
+	background-image: url('../img/wartortle.png');
 }
 #p2.evo1 {
 	background-image: url('../img/kedarbear.jpg');

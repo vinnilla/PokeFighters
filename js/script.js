@@ -9,9 +9,10 @@ var p1 = {
 	pQuickAttack1: "url('img/squirtle bite.png')",
 	pQuickAttack2: "url('img/squirtle bite 2.png')",
 	html: $('#p1'),
-	shield: $('#p1shield'),
+	// shield: $('#p1shield'),
 	$hp: $('#p1hp'),
 	$combo: $('#p1combo'),
+	$evo1: $('.evolve1').eq(0),
 	position: 0,
 	nPosition: 0,
 	health: 100,
@@ -49,7 +50,7 @@ var p2 = {
 	pQuickAttack1: "url('img/charmander scratch 1.png')",
 	pQuickAttack2: "url('img/charmander scratch 2.png')",
 	html: $('#p2'),
-	shield: $('#p2shield'),
+	// shield: $('#p2shield'),
 	$hp: $('#p2hp'),
 	$combo: $('#p2combo'),
 	position: 18,
@@ -240,8 +241,8 @@ function attack(aggressor, defender, type){
 				aggressor.sequence--;
 			}
 		}
-		defender.html.css('z-index', 0)
-		aggressor.html.css('z-index', 1);
+		defender.html.css('z-index', 1)
+		aggressor.html.css('z-index', 2);
 		aggressor.attack = true;
 		if (aggressor == p2) {
 			aggressor.html.css('left', parseInt(aggressor.html.css('left'))-100);
@@ -282,7 +283,7 @@ function attack(aggressor, defender, type){
 					defender.combo = 0;
 					// clearInterval(aggressor.comboId);
 					// aggressor.comboId = comboReset(aggressor);
-					//evolution(aggressor);
+					evolution(aggressor);
 					//stun defender if attack isn't blocked
 					stun(defender, aggressor.attackSpeed);
 					if (defender.attack != true) {
@@ -346,7 +347,8 @@ function evolution(player) {
 		// player.html.addClass('evo1');
 		//1.5x base damage
 		player.damage = player.nDamage*1.5;
-		// console.log(player.attackSpeed);
+		player.$evo1.removeClass('hidden');
+		console.log(player.attackSpeed);
 		//reset evolution after 5 seconds
 		setTimeout(function(){
 			//same as above
@@ -354,6 +356,7 @@ function evolution(player) {
 			// player.html.addClass('standard');
 			//reset to base attack speed
 			player.damage = player.nDamage;
+			player.$evo1.addClass('hidden');
 		}, 5000);
 	}
 }
