@@ -6,6 +6,8 @@ var p1 = {
 	pAttack: "url('img/squirtle_attack.png')",
 	pBlock: "url('img/squirtle_block.png')",
 	pFlinch: "url('img/squirtle_flinch.png')",
+	pQuickAttack1: "url('img/squirtle bite.png')",
+	pQuickAttack2: "url('img/squirtle bite 2.png')",
 	html: $('#p1'),
 	shield: $('#p1shield'),
 	$hp: $('#p1hp'),
@@ -19,8 +21,8 @@ var p1 = {
 	sequence: 0,
 	damage: 5,
 	nDamage: 5,
-	attackSpeed: 10,
-	nAttackSpeed: 10,
+	attackSpeed: 20,
+	nAttackSpeed: 20,
 	attackCD: 0,
 	attack: false,
 	stun: false,
@@ -276,16 +278,18 @@ function attack(aggressor, defender, type){
 					}
 					//combo tracking -- only iterate combo if attack is not blocked
 					aggressor.combo++;
-					clearInterval(aggressor.comboId);
-					aggressor.comboId = comboReset(aggressor);
+					// taking damage will reset
+					defender.combo = 0;
+					// clearInterval(aggressor.comboId);
+					// aggressor.comboId = comboReset(aggressor);
 					//evolution(aggressor);
 					//stun defender if attack isn't blocked
-					stun(defender);
+					stun(defender, aggressor.attackSpeed);
 					if (defender.attack != true) {
 						defender.html.css('background-image', defender.pFlinch);
 						setTimeout(function() {
 							neutralCSS(defender);
-						},250)	
+						},50*aggressor.attackSpeed)	
 					}
 				}
 				else { //damage halved when block
@@ -317,20 +321,20 @@ function setAttackCD(aggressor, time) {
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
 
-function comboReset(player) {
-	//reset combo after 3 seconds
-	var id = setTimeout(function(){
-		player.combo = 0;
-		updateStats();
-	},3000);
-	return id;
-}
+// function comboReset(player) {
+// 	//reset combo after 3 seconds
+// 	var id = setTimeout(function(){
+// 		player.combo = 0;
+// 		updateStats();
+// 	},3000);
+// 	return id;
+// }
 
 function evolution(player) {
 	if (player.combo >= 6) {
 		//double base damage
 		player.damage = player.nDamage*2;
-		console.log(player.damage);
+		// console.log(player.damage);
 		setTimeout(function() {
 			//reset to base damage;
 			player.damage = player.nDamage;
@@ -340,27 +344,27 @@ function evolution(player) {
 		//replace with changing css background image to whatever image
 		// player.html.removeClass('standard');
 		// player.html.addClass('evo1');
-		//double base attack speed
-		player.attackSpeed = player.nAttackSpeed/2;
-		console.log(player.attackSpeed);
+		//1.5x base damage
+		player.damage = player.nDamage*1.5;
+		// console.log(player.attackSpeed);
 		//reset evolution after 5 seconds
 		setTimeout(function(){
 			//same as above
 			// player.html.removeClass('evo1');
 			// player.html.addClass('standard');
 			//reset to base attack speed
-			player.attackSpeed = player.nAttackSpeed;
+			player.damage = player.nDamage;
 		}, 5000);
 	}
 }
 
 // ------------------------------------------ATTACK EFFECTS------------------------------------------ //
 
-function stun(defender) {
+function stun(defender, rate) {
 	defender.stun = true;
 	setTimeout(function() {
 		defender.stun = false;
-	},250);
+	},50*rate);
 }
 
 // ------------------------------------------BLOCKING------------------------------------------ //
