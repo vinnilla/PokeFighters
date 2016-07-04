@@ -167,7 +167,8 @@ function testMove(player, direction) {
 function move(player, value) {
 	player.position += value;
 	player.model.animate({left: x[player.position]}, 100);
-	player.evo1.css('left', x[player.position]);
+	player.evo1.css('left', parseInt(x[player.position]) + 30);
+	player.evo2.css('left', parseInt(x[player.position]) + 30);
 	//conditional allows movement while blocking without changing the character model
 	if (!player.block) {
 		neutralCSS(player);
@@ -290,6 +291,7 @@ function attack(aggressor, defender, type){
 					// taking damage will reset
 					defender.combo = 0;
 					defender.evo1.addClass('hidden');
+					defender.evo2.addClass('hidden');
 					// clearInterval(aggressor.comboId);
 					// aggressor.comboId = comboReset(aggressor);
 					evolution(aggressor);
@@ -342,12 +344,13 @@ function evolution(player) {
 		player.damage = player.nDamage*3;
 		player.evo1.addClass('hidden');
 		player.evo2.removeClass('hidden');
-		console.log(player.damage);
+		// console.log(player.damage);
 		player.comboID = setTimeout(function() {
 			//reset to base damage;
 			player.damage = player.nDamage;
-			payer.evo2.addClass('hidden');
+			player.evo2.addClass('hidden');
 			player.combo = 0;
+			console.log('hi');
 			updateStats();
 		}, 5000)
 	}
@@ -358,7 +361,7 @@ function evolution(player) {
 		//2x base damage
 		player.damage = player.nDamage*2;
 		player.evo1.removeClass('hidden');
-		console.log(player.damage);
+		//console.log(player.damage);
 		//reset evolution after 5 seconds
 		player.comboID = setTimeout(function(){
 			//same as above
@@ -368,6 +371,7 @@ function evolution(player) {
 			player.damage = player.nDamage;
 			player.evo1.addClass('hidden');
 			player.combo = 0;
+			console.log('hello');
 			updateStats();
 		}, 5000);
 	}

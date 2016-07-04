@@ -113,8 +113,6 @@ h2, h4, div {
 .evolve1, .evolve2 {
 	width: 300px;
 	position: relative;
-	bottom: 100px;
-	left: 50px;
 	z-index: 1;
 	opacity: 0.5;
 	background-repeat: no-repeat;
@@ -122,15 +120,19 @@ h2, h4, div {
 }
 .evolve1 {
 	height: 400px;
+	bottom: 90px;
+	left: 0px;
 }
 .evolve2 {
 	height: 500px;
+	bottom: 155px;
+	left: 5px;
 }
 #p1 .evolve1 {
 	background-image: url('../img/wartortle.png');
 }
 #p1 .evolve2 {
-	background-image: url('../img/wartortle.png');
+	background-image: url('../img/blastoise.png');
 }
 #p2.evolve1 {
 	background-image: url('../img/kedarbear.jpg');
