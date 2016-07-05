@@ -22,7 +22,8 @@ body {
 	text-align: center;
 	font-size: 50px;
 	position: absolute;
-	top: 0; bottom: 0; left: 0; right: 0;
+	top: 0; bottom: 225px; left: 0; right: 0;
+	background-color: rgba(0,0,0,0.7);
 }
 
 #stats {/*
@@ -86,13 +87,13 @@ h2, h4, div {
 	background-color: rgba(0,0,0,0.7);
 }
 #p1blockback, #p1block {
-	left: 30px;
+	left: 50px;
 }
 #p2blockback, #p2block {
-	left: 870px;
+	left: 850px;
 }
 #timer {
-	left: 580px;
+	left: 600px;
 	background-color:rgba(0,0,0,0.7);
 }
 #stats div.badge {
@@ -153,8 +154,8 @@ h2, h4, div {
 }
 .evolve2 {
 	height: 500px;
-	bottom: 155px;
-	left: 5px;
+	bottom: 160px;
+	left: 0px;
 }
 #p1 .evolve1 {
 	background-image: url('../img/wartortle.png');
@@ -168,7 +169,10 @@ h2, h4, div {
 #p2.evolve2 {
 	background-image: url('../img/kedarbear.jpg');
 }*/
-
+#p1, #p2{
+	width:0;
+	height:0;
+}
 /*#p1shield, #p2shield {
 	background-color: rgba(200,0,200,0.8);
 	border-radius:150px;

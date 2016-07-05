@@ -40,6 +40,7 @@ var p1 = {
 	blockCount: 3,
 	nBlockCount: 3,
 	blockID: 0,
+	blockID2: 0,
 	wins: 0,
 	badge1: $('#p1badge1'),
 	badge2: $('#p1badge2')
@@ -87,6 +88,7 @@ var p2 = {
 	blockCount: 3,
 	nBlockCount: 3,
 	blockID: 0,
+	blockID2: 0,
 	wins: 0,
 	badge1: $('#p2badge1'),
 	badge2: $('#p2badge2')
@@ -251,7 +253,6 @@ function attack(aggressor, defender, type){
 		aggressor.model.css('z-index', 2);
 		aggressor.attack = true;
 		if (aggressor == p2) {
-			console.log('shift left');
 			aggressor.model.css('left', parseInt(aggressor.model.css('left'))-100);
 		}
 		//attacking creates animation lock
@@ -348,7 +349,6 @@ function evolution(player) {
 			player.damage = player.nDamage;
 			player.evo2.hide();
 			player.combo = 0;
-			console.log('hi');
 			updateStats();
 		}, 5000)
 	}
@@ -398,12 +398,13 @@ function block(player) {
 		player.block = true;
 		//reset 3 second cooldown for block recharge each time player blocks
 		clearInterval(player.blockID);
+		clearInterval(player.blockID2);
 		//change css
 		player.model.css('background-image', player.pBlock);
 		updateStats();
 		//toggleBlock(player.shield);
 		//make block false after 1 second
-		setTimeout(function() {
+		player.blockID2 = setTimeout(function() {
 			player.block = false;
 			//toggleBlock(player.shield);
 			if (player.attack == false) {
@@ -448,10 +449,17 @@ function updateStats() {
 	//combo
 	p1.$combo.text(p1.combo);
 	p2.$combo.text(p2.combo);
+	if (p2.combo == 10) {
+		p2.$combo.css('left', 1154);
+	}
+	else if (p2.combo == 0) {
+		p2.$combo.css('left', 1174)
+	}
+	//block bar
 	p1.$block.css('width', p1.blockCount *100);
 	p2.$block.css('width', p2.blockCount *100);
 	//make it so block bar shifts right as it shrinks
-	p2.$block.css('left', 870 + 100*(p2.nBlockCount - p2.blockCount));
+	p2.$block.css('left', 850 + 100*(p2.nBlockCount - p2.blockCount));
 }
 
 function roundStart(round) {
@@ -494,7 +502,7 @@ function roundEnd(p1, p2) {
 	if (p1.health == 0) {
 		$message.text(p2.name + tempString);
 	}
-	else {
+	else if (p2.health == 0) {
 		$message.text(p1.name + tempString);
 	}
 	$message.show();
@@ -504,6 +512,8 @@ function roundEnd(p1, p2) {
 	p2.position = p2.nPosition;
 	p1.evo1.hide();
 	p2.evo1.hide();
+	p1.evo2.hide();
+	p2.evo2.hide();
 	neutralCSS(p1);
 	neutralCSS(p2);
 	//shift models back
