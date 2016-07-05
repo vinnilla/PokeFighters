@@ -15,6 +15,7 @@ var p1 = {
 	// shield: $('#p1shield'),
 	$hp: $('#p1hp'),
 	$combo: $('#p1combo'),
+	$block: $('#p1block'),
 	position: 0,
 	nPosition: 0,
 	health: 100,
@@ -36,7 +37,9 @@ var p1 = {
 	blockStrength: 5,
 	nBlockStrength: 5,
 	block: false,
-	blockCD: 0,
+	blockCount: 3,
+	nBlockCount: 3,
+	blockID: 0,
 	wins: 0,
 	badge1: $('#p1badge1'),
 	badge2: $('#p1badge2')
@@ -59,6 +62,7 @@ var p2 = {
 	// shield: $('#p2shield'),
 	$hp: $('#p2hp'),
 	$combo: $('#p2combo'),
+	$block: $('#p2block'),
 	position: 18,
 	nPosition: 18,
 	health: 100,
@@ -80,7 +84,9 @@ var p2 = {
 	blockStrength: 4,
 	nBlockStrength: 4,
 	block: false,
-	blockCD: 0,
+	blockCount: 3,
+	nBlockCount: 3,
+	blockID: 0,
 	wins: 0,
 	badge1: $('#p2badge1'),
 	badge2: $('#p2badge2')
@@ -395,13 +401,16 @@ function stun(defender, rate) {
 // ------------------------------------------BLOCKING------------------------------------------ //
 
 function block(player) {
-	if (player.blockCD <= 0 && player.attack == false) {
+	if (player.blockCount > 0 && player.attack == false) {
 		//3 second cd
-		player.blockCD = 3;
+		player.blockCount--;
 		player.block = true;
+		//reset 3 second cooldown for block recharge each time player blocks
+		clearInterval(player.blockID);
 		//change css
-		//toggleBlock(player.shield);
 		player.model.css('background-image', player.pBlock);
+		updateStats();
+		//toggleBlock(player.shield);
 		//make block false after 1 second
 		setTimeout(function() {
 			player.block = false;
@@ -410,13 +419,11 @@ function block(player) {
 				neutralCSS(player);
 			}
 		}, 1000);
-		//countdown block cool down
-		var id = setInterval(function() {
-			player.blockCD--;
-			if (player.blockCD <= 0) {
-				clearInterval(id);
-			}
-		}, 1000);
+		//3 cooldown for block recharge
+		player.blockID = setInterval(function() {
+			player.blockCount = player.nBlockCount;
+			updateStats();
+		}, 3000);
 	}
 }
 
@@ -450,6 +457,10 @@ function updateStats() {
 	//combo
 	p1.$combo.text(p1.combo);
 	p2.$combo.text(p2.combo);
+	p1.$block.css('width', p1.blockCount *100);
+	p2.$block.css('width', p2.blockCount *100);
+	//make it so block bar shifts right as it shrinks
+	p2.$block.css('left', 870 + 100*(p2.nBlockCount - p2.blockCount));
 }
 
 function resetGame(p1, p2) {
@@ -473,6 +484,7 @@ function resetGame(p1, p2) {
 	p1.block = p2.block = false;
 	p1.blockCD = p2.blockCD = 0;
 	p1.attack = p2.attack = false;
+	p1.blockCount = p2.blockCount = p1.nBlockCount;
 	//reset stat changes due to evolution
 	p1.attackSpeed = p1.nAttackSpeed;
 	p2.attackSpeed = p2.nAttackSpeed;

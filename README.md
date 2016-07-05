@@ -1,7 +1,6 @@
 #PokeFighters
 
 ![Image of Squirtle](img/squirtle.png)
-![Image of Wartortle](img/wartortle.png)
 ![Image of Blastoise](img/blastoise.png)
 
 ##Game Dev Approach:
@@ -50,7 +49,7 @@
 ###P2 :  /
 
 * When blocking, a player will receive reduced damage (based on blockstrength) and will not suffer from the stun effect.
-* However, blocking has a cooldown of 3 seconds. Use your blocks wisely.
+* However, each player can only block up to 3 times before waiting for the blocks to recharge. Blocks will restore after 3 seconds but blocking will reset this timer.
 
 ####Stun:
 
