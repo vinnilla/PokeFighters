@@ -254,6 +254,7 @@ function attack(aggressor, defender, type){
 		aggressor.model.css('z-index', 2);
 		aggressor.attack = true;
 		if (aggressor == p2) {
+			console.log('shift left');
 			aggressor.model.css('left', parseInt(aggressor.model.css('left'))-100);
 		}
 		//attacking creates animation lock
@@ -405,7 +406,9 @@ function block(player) {
 		setTimeout(function() {
 			player.block = false;
 			//toggleBlock(player.shield);
-			neutralCSS(player);
+			if (player.attack == false) {
+				neutralCSS(player);
+			}
 		}, 1000);
 		//countdown block cool down
 		var id = setInterval(function() {
