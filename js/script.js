@@ -103,9 +103,17 @@ var $document = $(document);
 var $timer = $('#timer');
 var $message = $('#message');
 var round = 1;
-//start first round
-roundStart(round);
+var $instructions = $('#instructions');
+var $background = $('#background');
+
+// ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
+
+//show instruction screen
+$instructions.focus();
+$document.on('keypress', hideInstructions);
+
 // ------------------------------------------MOVEMENT------------------------------------------ //
+
 function movement(e) {
 	// d
 	if (e.keyCode == 68) {
@@ -281,6 +289,7 @@ function attack(aggressor, defender, type){
 				if (!defender.block) {
 					if (type == 'strong') {
 						defender.health -= aggressor.damage;
+						multipleHit(aggressor, defender, timeout);
 					}
 					else {
 						defender.health -= aggressor.qDamage;
@@ -301,6 +310,7 @@ function attack(aggressor, defender, type){
 				else { //damage halved when block
 					if (type == 'strong') {
 						defender.health -= aggressor.damage/defender.blockStrength;
+						multipleHit(aggressor, defender, timeout);
 					}
 					else {
 						defender.health -= aggressor.qDamage/defender.blockStrength;
@@ -308,7 +318,9 @@ function attack(aggressor, defender, type){
 				}
 				updateStats();
 				//check KO
-				knockOut(aggressor, defender);
+				if (type != 'strong') {
+					knockOut(aggressor, defender);
+				}
 			}
 		}
 	}	
@@ -323,6 +335,26 @@ function setAttackCD(aggressor, time) {
 			clearInterval(id);
 		}
 	}, time*aggressor.attackSpeed);
+}
+
+function multipleHit(aggressor, defender, time) {
+	var counter = 2;
+	var id = setInterval(function() {
+		if (testCollision(aggressor)) {
+			if (!defender.block){
+				defender.health -= aggressor.damage;
+			}
+			else {
+				defender.health -= aggressor.damage/defender.blockStrength;
+			}
+		}
+		counter--;
+		updateStats();
+		if (counter <= 0) {
+			clearInterval(id);
+			knockOut(aggressor, defender);
+		}
+	}, time*aggressor.attackSpeed/3)
 }
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
@@ -369,7 +401,6 @@ function evolution(player) {
 			player.damage = player.nDamage;
 			player.evo1.hide();
 			player.combo = 0;
-			console.log('hello');
 			updateStats();
 		}, 5000);
 	}
@@ -470,7 +501,7 @@ function roundStart(round) {
 	timer = 90;
 	updateStats();
 	//change round start message
-	if (round == 3) {
+	if (p1.wins == p2.wins && p1.wins != 0) {
 		$message.text('FINAL ROUND');
 	}
 	else {
@@ -493,32 +524,34 @@ function roundStart(round) {
 	}, 4000);
 }
 
-function roundEnd(p1, p2) {
+function roundEnd(p1, p2, winner) {
 	//remove event listeners
 	$document.off('keydown', movement);
 	$document.off('keyup', combat);
 	var tempString = " Wins Round " + round + "!";
-	//check conditions
-	if (p1.health == 0) {
-		$message.text(p2.name + tempString);
-	}
-	else if (p2.health == 0) {
-		$message.text(p1.name + tempString);
-	}
-	$message.show();
 
-	//reset model position
-	p1.position = p1.nPosition;
-	p2.position = p2.nPosition;
 	p1.evo1.hide();
 	p2.evo1.hide();
 	p1.evo2.hide();
 	p2.evo2.hide();
-	neutralCSS(p1);
-	neutralCSS(p2);
-	//shift models back
-	move(p1, 0);
-	move(p2, 0);
+
+	//check conditions
+	if (p1.health <= 0) {
+		$message.text((p2.name + tempString).toUpperCase());
+	}
+	else if (p2.health <= 0) {
+		$message.text((p1.name + tempString).toUpperCase());
+	}
+	console.log(p1.wins + ' ' + p2.wins);
+	if (p1.wins == 2 || p2.wins == 2) {		
+		$message.text(winner.name + ' wins! The page will now reload.');
+		$message.show();
+		setTimeout(function() {
+			$message.hide();
+			location.reload();
+		},3000)
+	}
+	$message.show();
 	//clear player 2 dynamic shifting
 	clearTimeout(p2.attackLock);
 	//reset timer
@@ -526,6 +559,14 @@ function roundEnd(p1, p2) {
 	
 	//reset stats
 	setTimeout(function() {
+		//reset model position
+		p1.position = p1.nPosition;
+		p2.position = p2.nPosition;
+		neutralCSS(p1);
+		neutralCSS(p2);
+		//shift models back
+		move(p1, 0);
+		move(p2, 0);
 		//iterate round
 		round++;
 		//reset health
@@ -558,8 +599,7 @@ function knockOut(aggressor, defender) {
 		clearInterval(defender.timerid);
 		//add badge
 		addBadge(aggressor);
-		aggressor.wins++;
-		roundEnd(p1, p2);
+		roundEnd(p1, p2, aggressor);
 	}
 }
 
@@ -577,9 +617,15 @@ function addBadge(winner) {
 	}
 	else {
 		winner.badge2.css('background-image', "url('img/badge.png')");
-		alert(winner.name + ' wins the best of three! The page will now reload.')
-		location.reload();
 	}
+}
+
+function hideInstructions() {
+	$instructions.hide();
+	$background.show();
+	$document.off('keypress', hideInstructions);
+	//start first round
+	roundStart(round);
 }
 
 // ------------------------------------------ANIMATION------------------------------------------ //

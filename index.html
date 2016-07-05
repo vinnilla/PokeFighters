@@ -7,8 +7,33 @@
 	<link href="css/style.css" rel="stylesheet" type='text/css'>
 </head>
 <body>
-	<div id="background">
-		<div id="message">hello</div>
+	<div id="instructions">
+		<div id="title">PokeFighters</div>
+		<div id="one">
+			<h1>Squirtle</h1>
+			<h3>Move Left: A</h3>
+			<h3>Move Right: D</h3>
+			<h3>Fast Attack: 1</h3>
+			<h3>Strong Attack: 2</h3>
+			<h3>Block: 3</h3>
+		</div>
+		<div id="two">
+			<h1>Charmander</h1>
+			<h3>Move Left: <- </h3>
+			<h3>Move Right: -> </h3>
+			<h3>Fast Attack: , </h3>
+			<h3>Strong Attack:  . </h3>
+			<h3>Block: / </h3>
+		</div>
+		<div id="common">
+			<p>Fast Attack: Builds combo quickly but does minimal damage.</p>
+			<p>Strong Attack: Can damage opponent multiple times as long as opponent stays in range. Damage scales with evolution power.</p>
+			<p>Block: Minimize damage and stun on hit while also preventing opponent's combo from building.</p>
+		</div>
+		<div id="continue">PRESS ANY BUTTON TO CONTINUE</div>
+	</div>
+	<div id="background" class="hidden">
+		<div id="message"></div>
 		<div id="stats">
 			<div id="p1hpback"></div>
 			<div id="p1hp"></div>
