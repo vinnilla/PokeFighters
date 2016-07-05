@@ -14,6 +14,17 @@ body {
 	top: 0; bottom: 0; left: 0; right: 0;
 }
 
+#message {
+	margin: auto;
+	width: auto;
+	height: 60px;
+	color: white;
+	text-align: center;
+	font-size: 50px;
+	position: absolute;
+	top: 0; bottom: 0; left: 0; right: 0;
+}
+
 #stats {/*
 	border: 1px solid blue;*/
 	width:1199px;
@@ -151,12 +162,12 @@ h2, h4, div {
 #p1 .evolve2 {
 	background-image: url('../img/blastoise.png');
 }
-#p2.evolve1 {
+/*#p2.evolve1 {
 	background-image: url('../img/kedarbear.jpg');
 }
 #p2.evolve2 {
 	background-image: url('../img/kedarbear.jpg');
-}
+}*/
 
 /*#p1shield, #p2shield {
 	background-color: rgba(200,0,200,0.8);

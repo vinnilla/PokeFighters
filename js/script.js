@@ -99,20 +99,11 @@ var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '4
 //pointers to html elements not specific to player
 var $document = $(document);
 var $timer = $('#timer');
-
-//show starting stats
-updateStats();
-neutralCSS(p1);
-neutralCSS(p2);
-//start round timer
-var timer = 90;
-var timerID = startTimer();
-
-$document.on('keydown', movement);
-$document.on('keyup', combat);
-
+var $message = $('#message');
+var round = 1;
+//start first round
+roundStart(round);
 // ------------------------------------------MOVEMENT------------------------------------------ //
-
 function movement(e) {
 	// d
 	if (e.keyCode == 68) {
@@ -297,8 +288,8 @@ function attack(aggressor, defender, type){
 					aggressor.combo++;
 					// taking damage will reset
 					defender.combo = 0;
-					defender.evo1.addClass('hidden');
-					defender.evo2.addClass('hidden');
+					defender.evo1.hide();
+					defender.evo2.hide();
 					// clearInterval(aggressor.comboId);
 					// aggressor.comboId = comboReset(aggressor);
 					evolution(aggressor);
@@ -349,13 +340,13 @@ function evolution(player) {
 	if (player.combo >= 6) {
 		//3x base damage
 		player.damage = player.nDamage*3;
-		player.evo1.addClass('hidden');
-		player.evo2.removeClass('hidden');
+		player.evo1.hide();
+		player.evo2.show();
 		// console.log(player.damage);
 		player.comboID = setTimeout(function() {
 			//reset to base damage;
 			player.damage = player.nDamage;
-			player.evo2.addClass('hidden');
+			player.evo2.hide();
 			player.combo = 0;
 			console.log('hi');
 			updateStats();
@@ -367,7 +358,7 @@ function evolution(player) {
 		// player.html.addClass('evo1');
 		//2x base damage
 		player.damage = player.nDamage*2;
-		player.evo1.removeClass('hidden');
+		player.evo1.show();
 		//console.log(player.damage);
 		//reset evolution after 5 seconds
 		player.comboID = setTimeout(function(){
@@ -376,7 +367,7 @@ function evolution(player) {
 			// player.html.addClass('standard');
 			//reset to base attack speed
 			player.damage = player.nDamage;
-			player.evo1.addClass('hidden');
+			player.evo1.hide();
 			player.combo = 0;
 			console.log('hello');
 			updateStats();
@@ -463,77 +454,109 @@ function updateStats() {
 	p2.$block.css('left', 870 + 100*(p2.nBlockCount - p2.blockCount));
 }
 
-function resetGame(p1, p2) {
-	//reset position
-	p1.position = p1.nPosition;
-	p2.position = p2.nPosition;
+function roundStart(round) {
+	//show starting stats
+	updateStats();
 	neutralCSS(p1);
 	neutralCSS(p2);
-	clearTimeout(p1.attackLock);
-	clearTimeout(p2.attackLock);
+	timer = 90;
+	updateStats();
+	//change round start message
+	if (round == 3) {
+		$message.text('FINAL ROUND');
+	}
+	else {
+		$message.text('ROUND ' + round);
+	}
+	//show message
+	$message.show();
+	//signal start
+	setTimeout(function() {
+		$message.text('FIGHT!');
+	}, 3000);
+	//actual start
+	setTimeout(function() {
+		$message.hide();
+		//start round timer
+		timerID = startTimer();	
+		//enable events
+		$document.on('keydown', movement);
+		$document.on('keyup', combat);
+	}, 4000);
+}
+
+function roundEnd(p1, p2) {
+	//remove event listeners
+	$document.off('keydown', movement);
+	$document.off('keyup', combat);
+	var tempString = " Wins Round " + round + "!";
+	//check conditions
+	if (p1.health == 0) {
+		$message.text(p2.name + tempString);
+	}
+	else {
+		$message.text(p1.name + tempString);
+	}
+	$message.show();
+
+	//reset model position
+	p1.position = p1.nPosition;
+	p2.position = p2.nPosition;
+	p1.evo1.hide();
+	p2.evo1.hide();
+	neutralCSS(p1);
+	neutralCSS(p2);
 	//shift models back
 	move(p1, 0);
 	move(p2, 0);
-	//reset health
-	p1.health = p1.nHealth;
-	p2.health = p2.nHealth;
-	//reset combat mechanisms
-	p1.attackCD = p2.attackCD = 0;
-	p1.stun = p2.stun = false;
-	p1.combo = p2.combo = 0;
-	p1.block = p2.block = false;
-	p1.blockCD = p2.blockCD = 0;
-	p1.attack = p2.attack = false;
-	p1.blockCount = p2.blockCount = p1.nBlockCount;
-	//reset stat changes due to evolution
-	p1.attackSpeed = p1.nAttackSpeed;
-	p2.attackSpeed = p2.nAttackSpeed;
-	p1.damage = p1.nDamage;
-	p2.damage = p2.nDamage;
-	p1.blockStrength = p1.nBlockStrength;
-	p2.blockStrength = p2.nBlockStrength;
-	p1.evo1.addClass('hidden');
-	p2.evo1.addClass('hidden');
-	p1.evo2.addClass('hidden');
-	p2.evo2.addClass('hidden');
-	// p1.html.removeClass('evo1');
-	// p2.html.removeClass('evo1');
+	//clear player 2 dynamic shifting
+	clearTimeout(p2.attackLock);
 	//reset timer
 	clearInterval(timerID);
-	//start timer and show stats
-	timer = 90;
-	timerID = startTimer();
-	updateStats();
 	
-
-	$document.on('keydown', movement);
-	$document.on('keyup', combat);
+	//reset stats
+	setTimeout(function() {
+		//iterate round
+		round++;
+		//reset health
+		p1.health = p1.nHealth;
+		p2.health = p2.nHealth;
+		//reset combat mechanisms
+		clearTimeout(p1.attackLock);
+		clearTimeout(p2.attackLock);
+		p1.attackCD = p2.attackCD = 0;
+		p1.stun = p2.stun = false;
+		p1.combo = p2.combo = 0;
+		p1.block = p2.block = false;
+		p1.blockCD = p2.blockCD = 0;
+		p1.attack = p2.attack = false;
+		p1.blockCount = p2.blockCount = p1.nBlockCount;
+		//reset stat changes due to evolution
+		p1.attackSpeed = p1.nAttackSpeed;
+		p2.attackSpeed = p2.nAttackSpeed;
+		p1.damage = p1.nDamage;
+		p2.damage = p2.nDamage;
+		p1.blockStrength = p1.nBlockStrength;
+		p2.blockStrength = p2.nBlockStrength;
+		//start round
+		roundStart(round);
+	},3000);
 }
-
-//TODO call this function every second
 
 function knockOut(aggressor, defender) {
 	if (defender.health <= 0) {
 		clearInterval(defender.timerid);
-		//remove event listeners
-		$document.off('keydown', movement);
-		$document.off('keyup', combat);
-		//ensure flashing interval is cleared
-		//setTimeout(function() {alert(aggressor.name + " KO'd " + defender.name);}, 500);
 		//add badge
 		addBadge(aggressor);
 		aggressor.wins++;
-		resetGame(p1, p2);
+		roundEnd(p1, p2);
 	}
 }
 
 function checkTimer() {
 	if ($timer.text() == 0) {
-		alert('No one wins the round.');
-		//remove event listeners
-		$document.off('keydown', movement);
-		$document.off('keyup', combat);
-		resetGame(p1, p2);
+		$message.text("Time's Up!");
+		roundEnd(p1, p2);
 	}
 }
 
