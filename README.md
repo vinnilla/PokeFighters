@@ -9,7 +9,6 @@
 * All DOM manipulation is done with JQuery.
 
 ##User Stories:
-* As a player, I want to be able to choose the starter pokemon I want to play as
 * As a player, I want to be able to move my pokemon
 * As a player, I want to be able to attack the opponent
 * As a player, I want to be able to defend from an opponent's attack
