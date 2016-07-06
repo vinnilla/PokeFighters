@@ -123,6 +123,14 @@ setInterval(function() {
 //listener for any key press -- hides instruction screen and shows game screen
 $document.on('keypress', hideInstructions);
 
+function hideInstructions() {
+	$instructions.hide();
+	$background.show();
+	$document.off('keypress', hideInstructions);
+	//start first round
+	roundStart(round);
+}
+
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
 //accept key down event and check for right button
@@ -288,21 +296,18 @@ function setAttackCD(aggressor, time) {
 function stun(defender, rate) {
 	clearTimeout(defender.stunID);
 	//if (defender.attack != true) {
-		defender.stun = true;
-		defender.model.css('width', '300px');
-		// if (defender == p2 && defender.attack) {
-		// 	defender.model.css('left', parseInt(defender.model.css('left'))+100);
-		// }
-		clearTimeout(defender.attackLock);
-		if (defender == p2) {
-			defender.model.css('left', parseInt(defender.model.css('left'))+100);
-		}
-		defender.model.css('background-image', defender.pFlinch);
-		defender.stunID = setTimeout(function() {
-			defender.stun = false;
-			neutralCSS(defender);
-		//timeout dependent on attacker's attack speed
-		},25*rate)
+	defender.stun = true;
+	defender.model.css('width', '300px');
+	clearTimeout(defender.attackLock);
+	if (defender == p2) {
+		defender.model.css('left', parseInt(defender.model.css('left'))+100);
+	}
+	defender.model.css('background-image', defender.pFlinch);
+	defender.stunID = setTimeout(function() {
+		defender.stun = false;
+		neutralCSS(defender);
+	//timeout dependent on attacker's attack speed
+	},35*rate)
 	//}
 }
 
@@ -324,6 +329,15 @@ function multipleHit(aggressor, defender, time) {
 			knockOut(aggressor, defender); //check KO after attack animation ends
 		}
 	}, time*aggressor.attackSpeed/3)
+}
+
+function knockOut(aggressor, defender) {
+	if (defender.health <= 0) {
+		clearInterval(defender.timerid);
+		//add badge
+		addBadge(aggressor);
+		roundEnd(p1, p2, aggressor);
+	}
 }
 
 function attack(aggressor, defender, type){
@@ -408,7 +422,7 @@ function attack(aggressor, defender, type){
 					}
 				}
 				updateStats(); //show changes in hp, block, combo
-				if (type != 'strong') { //multipleHit also checks for KO so 'strong' is being filtered
+				if (type != 'strong') { //multipleHit also checks for KO, so 'strong' is being filtered
 					knockOut(aggressor, defender);
 				}
 			}
@@ -418,15 +432,6 @@ function attack(aggressor, defender, type){
 
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
 
-// function comboReset(player) {
-// 	//reset combo after 3 seconds
-// 	var id = setTimeout(function(){
-// 		player.combo = 0;
-// 		updateStats();
-// 	},3000);
-// 	return id;
-// }
-
 function evolution(player) {
 	clearTimeout(player.comboID);
 	if (player.combo >= 6) {
@@ -435,6 +440,7 @@ function evolution(player) {
 		player.evo1.hide();
 		player.evo2.show();
 		// console.log(player.damage);
+		//reset evolution after 5 seconds
 		player.comboID = setTimeout(function() {
 			//reset to base damage;
 			player.damage = player.nDamage;
@@ -445,8 +451,6 @@ function evolution(player) {
 	}
 	else if (player.combo >=3) {
 		//replace with changing css background image to whatever image
-		// player.html.removeClass('standard');
-		// player.html.addClass('evo1');
 		//2x base damage
 		player.damage = player.nDamage*2;
 		player.evo1.show();
@@ -454,9 +458,7 @@ function evolution(player) {
 		//reset evolution after 5 seconds
 		player.comboID = setTimeout(function(){
 			//same as above
-			// player.html.removeClass('evo1');
-			// player.html.addClass('standard');
-			//reset to base attack speed
+			//reset to base damage
 			player.damage = player.nDamage;
 			player.evo1.hide();
 			player.combo = 0;
@@ -469,21 +471,18 @@ function evolution(player) {
 
 function block(player) {
 	if (player.blockCount > 0 && player.attack == false) {
-		//3 second cd
 		player.blockCount--;
 		player.block = true;
 		//reset 3 second cooldown for block recharge each time player blocks
-		clearInterval(player.blockID);
-		clearInterval(player.blockID2);
+		clearInterval(player.blockID); //block recharge
+		clearInterval(player.blockID2); //block duration
 		//change css
 		player.model.css('background-image', player.pBlock);
 		updateStats();
-		//toggleBlock(player.shield);
 		//make block false after 1 second
 		player.blockID2 = setTimeout(function() {
 			player.block = false;
-			//toggleBlock(player.shield);
-			if (!player.attack) {
+			if (!player.attack) { //only change CSS if not attacking
 				neutralCSS(player);
 			}
 		}, 1000);
@@ -495,14 +494,18 @@ function block(player) {
 	}
 }
 
-// function toggleBlock(player) {
-// 	player.toggle(0,'hidden');
-// }
-
 // ------------------------------------------ROUND END------------------------------------------ //
+
+function checkTimer() {
+	if ($timer.text() == 0) {
+		$message.text("Time's Up!");
+		roundEnd(p1, p2);
+	}
+}
 
 function startTimer() {
 	$timer.text(timer);
+	//countdown every second
 	var id = setInterval(function() {
 		timer--;
 		$timer.text(timer);
@@ -514,13 +517,23 @@ function startTimer() {
 	return id;
 }
 
+function addBadge(winner) {
+	winner.wins++;
+	if (winner.wins == 1) {
+		winner.badge1.css('background-image', "url('img/badge.png')");
+	}
+	else {
+		winner.badge2.css('background-image', "url('img/badge.png')");
+	}
+}
+
 function updateStats() {
 	//hp
 	p1.$hp.text(p1.health);
 	p1.$hp.css('width', 5*(p1.health));
 	p2.$hp.text(p2.health);
 	p2.$hp.css('width', 5*(p2.health));
-	//makes it so hp bar shifts right as it shrinks
+	//makes it so player 2 hp bar shifts right as it shrinks
 	p2.$hp.css('left', 698+5*(p2.nHealth-p2.health));
 	//combo
 	p1.$combo.text(p1.combo);
@@ -534,7 +547,7 @@ function updateStats() {
 	//block bar
 	p1.$block.css('width', p1.blockCount *100);
 	p2.$block.css('width', p2.blockCount *100);
-	//make it so block bar shifts right as it shrinks
+	//make it so player 2 block bar shifts right as it shrinks
 	p2.$block.css('left', 850 + 100*(p2.nBlockCount - p2.blockCount));
 }
 
@@ -637,38 +650,4 @@ function roundEnd(p1, p2, winner) {
 		//start round
 		roundStart(round);
 	},3000);
-}
-
-function knockOut(aggressor, defender) {
-	if (defender.health <= 0) {
-		clearInterval(defender.timerid);
-		//add badge
-		addBadge(aggressor);
-		roundEnd(p1, p2, aggressor);
-	}
-}
-
-function checkTimer() {
-	if ($timer.text() == 0) {
-		$message.text("Time's Up!");
-		roundEnd(p1, p2);
-	}
-}
-
-function addBadge(winner) {
-	winner.wins++;
-	if (winner.wins == 1) {
-		winner.badge1.css('background-image', "url('img/badge.png')");
-	}
-	else {
-		winner.badge2.css('background-image', "url('img/badge.png')");
-	}
-}
-
-function hideInstructions() {
-	$instructions.hide();
-	$background.show();
-	$document.off('keypress', hideInstructions);
-	//start first round
-	roundStart(round);
 }

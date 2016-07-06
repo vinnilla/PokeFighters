@@ -167,7 +167,6 @@ h2, h4, div {
 /*	border-radius:100px;*/
 	position: absolute;
 	z-index: 1;
-	border: solid 2px red;
 }
 #p1 .normal {
 	left:0px;
