@@ -143,19 +143,19 @@ function movement(e) {
 		}
 	}
 	// a
-	else if (e.keyCode == 65) {
+	if (e.keyCode == 65) {
 		if (!p1.attack) {
 			testMove(p1, 'left');	
 		}
 	}
 	// ->
-	else if (e.keyCode == 39) {
+	if (e.keyCode == 39) {
 		if (!p2.attack) {
 			testMove(p2, 'right');
 		}
 	}
 	// <-
-	else if (e.keyCode == 37) {
+	if (e.keyCode == 37) {
 		if (!p2.attack) {
 			testMove(p2, 'left');
 		}
