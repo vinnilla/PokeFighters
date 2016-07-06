@@ -103,13 +103,23 @@ var $document = $(document);
 var $timer = $('#timer');
 var $message = $('#message');
 var round = 1;
-var $instructions = $('#instructions');
+var $instructions = $('#continue');
 var $background = $('#background');
+var check = true;
 
 // ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
 
 //show instruction screen
-$instructions.focus();
+setInterval(function() {
+	if (check) {
+		$instructions.addClass('hidden');
+		check = false;
+	}
+	else {
+		$instructions.removeClass('hidden');
+		check = true;
+	}
+}, 1000);
 $document.on('keypress', hideInstructions);
 
 // ------------------------------------------MOVEMENT------------------------------------------ //
