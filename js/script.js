@@ -109,7 +109,7 @@ var check = true;
 
 // ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
 
-//show instruction screen
+//make 'Press Any Key To Start' flash in and out
 setInterval(function() {
 	if (check) {
 		$instructions.hide();
@@ -120,10 +120,13 @@ setInterval(function() {
 		check = true;
 	}
 }, 1000);
+//listener for any key press -- hides instruction screen and shows game screen
 $document.on('keypress', hideInstructions);
 
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
+//accept key down event and check for right button
+//check if player is attacking (shouldn't be able to move if attacking) -- if not, run testMove()
 function movement(e) {
 	// d
 	if (e.keyCode == 68) {
