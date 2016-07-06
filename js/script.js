@@ -299,7 +299,8 @@ function stun(defender, rate) {
 	defender.stun = true;
 	defender.model.css('width', '300px');
 	clearTimeout(defender.attackLock);
-	if (defender == p2) {
+	if (defender == p2 && defender.attack) {
+		defender.attack = false;
 		defender.model.css('left', parseInt(defender.model.css('left'))+100);
 	}
 	defender.model.css('background-image', defender.pFlinch);
@@ -314,7 +315,7 @@ function stun(defender, rate) {
 function multipleHit(aggressor, defender, time) {
 	var counter = 2;
 	var id = setInterval(function() {
-		if (testCollision(aggressor)) {//check if collision is still true
+		if (testCollision(aggressor) && !aggressor.stun) {//check if collision is still true and not flinching
 			if (!defender.block){
 				defender.health -= aggressor.damage;
 			}
@@ -360,8 +361,8 @@ function attack(aggressor, defender, type){
 			}
 		}
 		//change z-index to place attack above defender (push attack effects to the top)
-		defender.model.css('z-index', 1)
-		aggressor.model.css('z-index', 2);
+		defender.model.css('z-index', 2)
+		aggressor.model.css('z-index', 3);
 		aggressor.attack = true;
 		//necessary shifting of p2 model when attacking (width is changing)
 		if (aggressor == p2) {
@@ -529,9 +530,9 @@ function addBadge(winner) {
 
 function updateStats() {
 	//hp
-	p1.$hp.text(p1.health);
+	p1.$hp.text(Math.floor(p1.health));
 	p1.$hp.css('width', 5*(p1.health));
-	p2.$hp.text(p2.health);
+	p2.$hp.text(Math.floor(p2.health));
 	p2.$hp.css('width', 5*(p2.health));
 	//makes it so player 2 hp bar shifts right as it shrinks
 	p2.$hp.css('left', 698+5*(p2.nHealth-p2.health));
@@ -553,7 +554,6 @@ function updateStats() {
 
 function roundStart(round) {
 	//show starting stats
-	updateStats();
 	neutralCSS(p1);
 	neutralCSS(p2);
 	timer = 90;
@@ -570,7 +570,7 @@ function roundStart(round) {
 	//signal start
 	setTimeout(function() {
 		$message.text('FIGHT!');
-	}, 3000);
+	}, 2000);
 	//actual start
 	setTimeout(function() {
 		$message.hide();
@@ -579,7 +579,7 @@ function roundStart(round) {
 		//enable events
 		$document.on('keydown', movement);
 		$document.on('keyup', combat);
-	}, 4000);
+	}, 3000);
 }
 
 function roundEnd(p1, p2, winner) {
@@ -587,20 +587,20 @@ function roundEnd(p1, p2, winner) {
 	$document.off('keydown', movement);
 	$document.off('keyup', combat);
 	var tempString = " Wins Round " + round + "!";
-
+	//hide evolution
 	p1.evo1.hide();
 	p2.evo1.hide();
 	p1.evo2.hide();
 	p2.evo2.hide();
-
-	//check conditions
-	if (p1.health <= 0) {
+	//check round end conditions
+	if (p1.health <= 0) { //p1 loses
 		$message.text((p2.name + tempString).toUpperCase());
 	}
-	else if (p2.health <= 0) {
+	else if (p2.health <= 0) { //p2 loses
 		$message.text((p1.name + tempString).toUpperCase());
 	}
-	console.log(p1.wins + ' ' + p2.wins);
+	$message.show();
+	//check game end condition
 	if (p1.wins == 2 || p2.wins == 2) {		
 		$message.text(winner.name + ' wins! The page will now reload.');
 		$message.show();
@@ -609,12 +609,10 @@ function roundEnd(p1, p2, winner) {
 			location.reload();
 		},3000)
 	}
-	$message.show();
 	//clear player 2 dynamic shifting
 	clearTimeout(p2.attackLock);
 	//reset timer
 	clearInterval(timerID);
-	
 	//reset stats
 	setTimeout(function() {
 		//reset model position
@@ -641,12 +639,12 @@ function roundEnd(p1, p2, winner) {
 		p1.attack = p2.attack = false;
 		p1.blockCount = p2.blockCount = p1.nBlockCount;
 		//reset stat changes due to evolution
-		p1.attackSpeed = p1.nAttackSpeed;
-		p2.attackSpeed = p2.nAttackSpeed;
+		// p1.attackSpeed = p1.nAttackSpeed;
+		// p2.attackSpeed = p2.nAttackSpeed;
 		p1.damage = p1.nDamage;
 		p2.damage = p2.nDamage;
-		p1.blockStrength = p1.nBlockStrength;
-		p2.blockStrength = p2.nBlockStrength;
+		// p1.blockStrength = p1.nBlockStrength;
+		// p2.blockStrength = p2.nBlockStrength;
 		//start round
 		roundStart(round);
 	},3000);
