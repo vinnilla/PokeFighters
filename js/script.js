@@ -112,11 +112,11 @@ var check = true;
 //show instruction screen
 setInterval(function() {
 	if (check) {
-		$instructions.addClass('hidden');
+		$instructions.hide();
 		check = false;
 	}
 	else {
-		$instructions.removeClass('hidden');
+		$instructions.show();
 		check = true;
 	}
 }, 1000);
