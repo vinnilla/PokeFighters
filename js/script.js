@@ -126,7 +126,7 @@ $document.on('keypress', hideInstructions);
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
 //accept key down event and check for right button
-//check if player is attacking (shouldn't be able to move if attacking) -- if not, run testMove()
+//check if player is attacking (shouldn't be able to move if attacking) -- if not, run testMove() (right below)
 function movement(e) {
 	// d
 	if (e.keyCode == 68) {
@@ -153,6 +153,7 @@ function movement(e) {
 		}
 	}
 }
+
 
 function testMove(player, direction) {
 	//p1 moving right
@@ -520,7 +521,7 @@ function roundStart(round) {
 	timer = 90;
 	updateStats();
 	//change round start message
-	if (p1.wins == p2.wins && p1.wins != 0) {
+	if (p1.wins == p2.wins && p1.wins > 0) {
 		$message.text('FINAL ROUND');
 	}
 	else {
