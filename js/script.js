@@ -184,8 +184,14 @@ function testMove(player, direction) {
 function move(player, value) {
 	player.position += value;
 	player.model.animate({left: x[player.position]}, 100);
-	player.evo1.css('left', parseInt(x[player.position]) + 30);
-	player.evo2.css('left', parseInt(x[player.position]) + 30);
+	if (player == p1) {
+		player.evo1.css('left', parseInt(x[player.position]) + 30);
+		player.evo2.css('left', parseInt(x[player.position]) + 30);
+	}
+	else {
+		player.evo1.css('left', parseInt(x[player.position]) - 50);
+		player.evo2.css('left', parseInt(x[player.position]) - 30);
+	}
 	//conditional allows movement while blocking without changing the character model
 	if (!player.block) {
 		neutralCSS(player);
