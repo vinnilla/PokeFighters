@@ -1,7 +1,7 @@
 #PokeFighters
 
-![Image of Squirtle](img/squirtle.png)
 ![Image of Blastoise](img/blastoise.png)
+![Image of Charizard](img/charizard.png)
 
 ##Game Dev Approach:
 * All stats are hard coded into objects - so far only two objects (pokemon) exist. More will be added if time permits and then these objects will be placed in an array for organized storage
