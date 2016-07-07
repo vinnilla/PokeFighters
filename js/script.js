@@ -331,7 +331,7 @@ function roundStart(round) {
 	p2.model.css('left', '900px'); p2.model.css('transform', 'scaleX(-1)');
 
 	//show starting stats
-	p1.$hp.show();
+	p2.$hp.show();
 	neutralCSS(p1);
 	neutralCSS(p2);
 	timer = 90;
