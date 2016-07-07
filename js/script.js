@@ -127,8 +127,8 @@ var playable = [
 		qDamage: 5,
 		nqDamage: 5,
 		sequence: 0,
-		damage: 5,
-		nDamage: 5,
+		damage: 15,
+		nDamage: 15,
 		attackSpeed: 20,
 		nAttackSpeed: 20,
 		attackCD: 0,
@@ -199,8 +199,8 @@ function setUp() {
 	characters = $('.character');
 	charLength = characters.length-1;
 	//push divs relative to previous one
-	for (var i=1; i<characters.length; i++) {
-		characters.eq(i).css('left', 335*i);
+	for (var i=1; i<charLength; i++) {
+		characters.eq(i).css('left', 450*i);
 	}
 	//add starting hover spots
 	characters.eq(0).addClass('p1hover');
@@ -265,6 +265,12 @@ function select(hover, player) {
 	}
 }
 
+function enableGoku() {
+	//set length to full array
+	charLength = characters.length;
+	$goku.show();
+}
+
 function choose1(e) {
 	// a
 	if (e.keyCode == 65) {
@@ -280,10 +286,7 @@ function choose1(e) {
 	}
 	// secretkey : n
 	if (e.keyCode == 78) {
-		console.log('hi');
-		//set length to full array
-		charLength = characters.length;
-		$goku.show();
+		enableGoku();
 	}
 }
 
@@ -300,7 +303,12 @@ function choose2(e) {
 	if (e.keyCode == 13) {
 		select('p2hover', p2);
 	}
+	// secretkey : n
+	if (e.keyCode == 78) {
+		enableGoku();
+	}
 }
+
 
 
 function roundStart(round) {
@@ -323,6 +331,7 @@ function roundStart(round) {
 	p2.model.css('left', '900px'); p2.model.css('transform', 'scaleX(-1)');
 
 	//show starting stats
+	p1.$hp.show();
 	neutralCSS(p1);
 	neutralCSS(p2);
 	timer = 90;
@@ -769,7 +778,12 @@ function updateStats() {
 	p1.$hp.text(Math.floor(p1.health));
 	p1.$hp.css('width', 5*(p1.health));
 	p2.$hp.text(Math.floor(p2.health));
-	p2.$hp.css('width', 5*(p2.health));
+	if (p2.health < 0) {
+		p2.$hp.hide();
+	}
+	else {
+		p2.$hp.css('width', 5*(p2.health));
+	}
 	//makes it so player 2 hp bar shifts right as it shrinks
 	p2.$hp.css('left', 698+5*(p2.nHealth-p2.health));
 	//combo

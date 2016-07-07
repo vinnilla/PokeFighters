@@ -81,6 +81,7 @@ h3 {
 	background-size: contain;
 }
 #Squirtle {
+	left: 50px;
 	background-image:url('../img/Squirtle/neutral.png');
 }
 #Charmander {
@@ -88,10 +89,15 @@ h3 {
 }
 #Bulbasaur {
 	background-image:url('../img/Bulbasaur/neutral.png');
+	transform: scaleX(-1);
 }
 #Goku {
+	top: 120px;
+	left: 500px;
 	background-image:url('../img/Goku/neutral.png');
+	transform: scaleX(-1);
 }
+
 .placeholder {
 	background-color: black;
 }
