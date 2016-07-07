@@ -110,6 +110,42 @@ var playable = [
 		blockID: 0,
 		blockID2: 0,
 		wins: 0
+	},
+	Goku = {
+		name: 'Goku',
+		pNeutral:"url('img/Goku/neutral.png')",
+		pWalk:"url('img/Goku/walk.png')",
+		pAttack:"url('img/Goku/beam.png')",
+		pBlock:"url('img/Goku/block.png')",
+		pFlinch:"url('img/Goku/flinch.png')",
+		pQuickAttack1: "url('img/Goku/punch1.png')",
+		pQuickAttack2: "url('img/Goku/punch2.png')",
+		pEvo1: "url('img/Goku/sayin1.png')",
+		pEvo2: "url('img/Goku/sayin3.png')",
+		health: 100,
+		nHealth: 100,
+		qDamage: 5,
+		nqDamage: 5,
+		sequence: 0,
+		damage: 5,
+		nDamage: 5,
+		attackSpeed: 20,
+		nAttackSpeed: 20,
+		attackCD: 0,
+		attack: false,
+		stun:false,
+		stunID: 0,
+		combo: 0,
+		comboId: 0,
+		attackLock: 0,
+		blockStrength: 8,
+		nBlockStrength: 8,
+		block: false,
+		blockCount: 3,
+		nBlockCount: 3,
+		blockID: 0,
+		blockID2: 0,
+		wins: 0
 	}
 ]
 
@@ -615,6 +651,7 @@ function attack(aggressor, defender, type){
 function evolution(player) {
 	clearTimeout(player.comboID);
 	if (player.combo >= 6) {
+		//player.model.css('opacity','.50');
 		//3x base damage
 		player.damage = player.nDamage*3;
 		player.evo1.hide();
@@ -623,6 +660,7 @@ function evolution(player) {
 		//reset evolution after 5 seconds
 		player.comboID = setTimeout(function() {
 			//reset to base damage;
+			//player.model.css('opacity','.100');
 			player.damage = player.nDamage;
 			player.evo2.hide();
 			player.combo = 0;
@@ -630,6 +668,7 @@ function evolution(player) {
 		}, 5000)
 	}
 	else if (player.combo >=3) {
+		//player.model.css('opacity','.50');
 		//replace with changing css background image to whatever image
 		//2x base damage
 		player.damage = player.nDamage*2;
@@ -639,6 +678,7 @@ function evolution(player) {
 		player.comboID = setTimeout(function(){
 			//same as above
 			//reset to base damage
+			//player.model.css('opacity','.100');
 			player.damage = player.nDamage;
 			player.evo1.hide();
 			player.combo = 0;
