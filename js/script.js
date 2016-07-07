@@ -1,110 +1,114 @@
 //create players
-var p1 = {
-	name: 'Squirtle',
-	pNeutral: "url('img/squirtle.png')",
-	pWalk: "url('img/squirtle_walk.png')",
-	pAttack: "url('img/squirtle_attack.png')",
-	pBlock: "url('img/squirtle_block.png')",
-	pFlinch: "url('img/squirtle_flinch.png')",
-	pQuickAttack1: "url('img/squirtle bite.png')",
-	pQuickAttack2: "url('img/squirtle bite 2.png')",
-	html: $('#p1'),
-	model: $('.normal').eq(0),
-	evo1: $('.evolve1').eq(0),
-	evo2: $('.evolve2').eq(0),
-	// shield: $('#p1shield'),
-	$hp: $('#p1hp'),
-	$combo: $('#p1combo'),
-	$block: $('#p1block'),
-	position: 0,
-	nPosition: 0,
-	health: 100,
-	nHealth: 100,
-	qDamage: 5,
-	nqDamage: 5,
-	sequence: 0,
-	damage: 5,
-	nDamage: 5,
-	attackSpeed: 20,
-	nAttackSpeed: 20,
-	attackCD: 0,
-	attack: false,
-	stun: false,
-	stunID: 0,
-	combo: 0,
-	comboId: 0,
-	attackLock: 0,
-	blockStrength: 8,
-	nBlockStrength: 8,
-	block: false,
-	blockCount: 3,
-	nBlockCount: 3,
-	blockID: 0,
-	blockID2: 0,
-	wins: 0,
-	badge1: $('#p1badge1'),
-	badge2: $('#p1badge2')
-}
+var playable = [
 
-var p2 = {
-	name: 'Charmander',
-	//position: 21,
-	pNeutral:"url('img/charmander.png')",
-	pWalk:"url('img/charmander walk.png')",
-	pAttack:"url('img/charmander attack.png')",
-	pBlock:"url('img/charmander block.png')",
-	pFlinch:"url('img/charmander flinch.png')",
-	pQuickAttack1: "url('img/charmander scratch 1.png')",
-	pQuickAttack2: "url('img/charmander scratch 2.png')",
-	html: $('#p2'),
-	model: $('.normal').eq(1),
-	evo1: $('.evolve1').eq(1),
-	evo2: $('.evolve2').eq(1),
-	// shield: $('#p2shield'),
-	$hp: $('#p2hp'),
-	$combo: $('#p2combo'),
-	$block: $('#p2block'),
-	position: 18,
-	nPosition: 18,
-	health: 100,
-	nHealth: 100,
-	qDamage: 5,
-	nqDamage: 5,
-	sequence: 0,
-	damage: 5,
-	nDamage: 5,
-	attackSpeed: 20,
-	nAttackSpeed: 20,
-	attackCD: 0,
-	attack: false,
-	stun:false,
-	stunID: 0,
-	combo: 0,
-	comboId: 0,
-	attackLock: 0,
-	blockStrength: 8,
-	nBlockStrength: 8,
-	block: false,
-	blockCount: 3,
-	nBlockCount: 3,
-	blockID: 0,
-	blockID2: 0,
-	wins: 0,
-	badge1: $('#p2badge1'),
-	badge2: $('#p2badge2')
-}
-
+	Squirtle = {
+		name: 'Squirtle',
+		pNeutral: "url('img/squirtle.png')",
+		pWalk: "url('img/squirtle_walk.png')",
+		pAttack: "url('img/squirtle_attack.png')",
+		pBlock: "url('img/squirtle_block.png')",
+		pFlinch: "url('img/squirtle_flinch.png')",
+		pQuickAttack1: "url('img/squirtle bite.png')",
+		pQuickAttack2: "url('img/squirtle bite 2.png')",
+		html: $('#p1'),
+		model: $('.normal').eq(0),
+		evo1: $('.evolve1').eq(0),
+		evo2: $('.evolve2').eq(0),
+		// shield: $('#p1shield'),
+		$hp: $('#p1hp'),
+		$combo: $('#p1combo'),
+		$block: $('#p1block'),
+		position: 0,
+		nPosition: 0,
+		health: 100,
+		nHealth: 100,
+		qDamage: 5,
+		nqDamage: 5,
+		sequence: 0,
+		damage: 5,
+		nDamage: 5,
+		attackSpeed: 20,
+		nAttackSpeed: 20,
+		attackCD: 0,
+		attack: false,
+		stun: false,
+		stunID: 0,
+		combo: 0,
+		comboId: 0,
+		attackLock: 0,
+		blockStrength: 8,
+		nBlockStrength: 8,
+		block: false,
+		blockCount: 3,
+		nBlockCount: 3,
+		blockID: 0,
+		blockID2: 0,
+		wins: 0,
+		badge1: $('#p1badge1'),
+		badge2: $('#p1badge2')
+	}, 
+	Charmander = {
+		name: 'Charmander',
+		//position: 21,
+		pNeutral:"url('img/charmander.png')",
+		pWalk:"url('img/charmander walk.png')",
+		pAttack:"url('img/charmander attack.png')",
+		pBlock:"url('img/charmander block.png')",
+		pFlinch:"url('img/charmander flinch.png')",
+		pQuickAttack1: "url('img/charmander scratch 1.png')",
+		pQuickAttack2: "url('img/charmander scratch 2.png')",
+		html: $('#p2'),
+		model: $('.normal').eq(1),
+		evo1: $('.evolve1').eq(1),
+		evo2: $('.evolve2').eq(1),
+		// shield: $('#p2shield'),
+		$hp: $('#p2hp'),
+		$combo: $('#p2combo'),
+		$block: $('#p2block'),
+		position: 18,
+		nPosition: 18,
+		health: 100,
+		nHealth: 100,
+		qDamage: 5,
+		nqDamage: 5,
+		sequence: 0,
+		damage: 5,
+		nDamage: 5,
+		attackSpeed: 20,
+		nAttackSpeed: 20,
+		attackCD: 0,
+		attack: false,
+		stun:false,
+		stunID: 0,
+		combo: 0,
+		comboId: 0,
+		attackLock: 0,
+		blockStrength: 8,
+		nBlockStrength: 8,
+		block: false,
+		blockCount: 3,
+		nBlockCount: 3,
+		blockID: 0,
+		blockID2: 0,
+		wins: 0,
+		badge1: $('#p2badge1'),
+		badge2: $('#p2badge2')
+	}
+]
 
 // var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'];
 var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'];
 
 //pointers to html elements not specific to player
 var $document = $(document);
+var $instructions = $('#instructions');
+var $continue = $('#continue');
+var $characterSelection = $('#characterSelection');
+var $background = $('#background');
 var $timer = $('#timer');
 var $message = $('#message');
 var round = 1;
-var $instructions = $('#continue');
-var $background = $('#background');
+
 var check = true;
 
 // ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
@@ -112,23 +116,116 @@ var check = true;
 //make 'Press Any Key To Start' flash in and out
 setInterval(function() {
 	if (check) {
-		$instructions.hide();
+		$continue.hide();
 		check = false;
 	}
 	else {
-		$instructions.show();
+		$continue.show();
 		check = true;
 	}
 }, 1000);
-//listener for any key press -- hides instruction screen and shows game screen
+//listener for any key press -- hides instruction screen and shows character selection
 $document.on('keypress', hideInstructions);
 
 function hideInstructions() {
 	$instructions.hide();
-	$background.show();
+	$characterSelection.show();
+	setUp();
 	$document.off('keypress', hideInstructions);
-	//start first round
-	roundStart(round);
+	//listener for key down -- choose characters
+	$document.on('keydown', choose); 
+}
+
+// ------------------------------------------CHARACTER SELECTION SCREEN------------------------------------------ //
+
+var selectionCounter = 0;
+
+function setUp() {
+	characters = $('.character');
+	//push divs relative to previous one
+	for (var i=1; i<characters.length; i++) {
+		characters.eq(i).css('left', 335*i);
+	}
+	//add starting hover spots
+	characters.eq(0).addClass('p1hover');
+	characters.eq(characters.length-1).addClass('p2hover');
+}
+
+function removeBorder(testClass, value) {
+	var test = true;
+	for (var i=0; i<characters.length; i++) {
+		if (characters.eq(i).hasClass(testClass) && test) {
+			characters.removeClass(testClass);
+			//check if adding value will push selector past the end of the array
+			if (i+value == characters.length) {
+				characters.eq(0).addClass(testClass);
+			}
+			else {
+				characters.eq(i+value).addClass(testClass);
+			}
+			test = false;
+		}
+	}
+	characters.removeClass('bothhover');
+	checkBoth();	
+}
+
+function checkBoth() {
+	//check if both are hovering over the same div
+	for (var i=0; i<characters.length; i++) {
+		if (characters.eq(i).hasClass('p1hover') && characters.eq(i).hasClass('p2hover')) {
+			characters.eq(i).addClass('bothhover');
+		}
+	} 
+}
+
+function select(hover, player) {
+	for (var i=0; i<characters.length; i++) {
+		if (characters.eq(i).hasClass(hover) && !characters.eq(i).hasClass('disable')) {
+			if (player == p1) {
+				p1 = playable[i];
+			}
+			else {
+				p2 = playable[i];
+			}
+			console.log(player);
+			characters.eq(i).addClass('disable');
+			selectionCounter++;
+		}
+	}
+	if (selectionCounter == 2) {
+		$characterSelection.hide();
+		$background.show();
+		//start first round
+		roundStart(round);
+	}
+}
+
+function choose(e) {
+	// a
+	if (e.keyCode == 65) {
+		removeBorder('p1hover', -1);
+	}
+	// d
+	if (e.keyCode == 68) {
+		removeBorder('p1hover', 1);
+	}
+	// <-
+	if (e.keyCode == 37) {
+		removeBorder('p2hover', -1);
+	}
+	// ->
+	if (e.keyCode == 39) {
+		removeBorder('p2hover', 1);
+	}
+	// space
+	if (e.keyCode == 32) {
+		select('p1hover', p1);
+	}
+	// enter
+	if (e.keyCode == 13) {
+		select('p2hover', p2);
+	}
 }
 
 // ------------------------------------------MOVEMENT------------------------------------------ //

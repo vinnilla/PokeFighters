@@ -3,7 +3,7 @@ body {
 	
 }
 
-#instructions, #background {
+#instructions, #background, #characterSelection {
 	margin: auto;
 	width: 1200px;
 	height: 550px;
@@ -11,7 +11,7 @@ body {
 	top: 0; bottom: 0; left: 0; right: 0;
 }
 
-
+/*INSTRUCTION SCREEN*/
 #instructions {
 	background-color: rgba(0,0,0,.1);
 }
@@ -52,6 +52,58 @@ h3 {
 	left: 300px; top: 500px;
 }
 
+/*CHARACTER SELECTION SCREEN*/
+#characterSelection {
+	color: white;
+	text-align: center;
+	/*background-color: gray;*/
+}
+#choose1, #choose2 {
+/*	background-image: url('../img/squirtle.png');*/
+	background-size: contain;
+	width: 150px;
+	height: 150px;
+	position: absolute;
+}
+#choose1 {
+	left: 100px;
+}
+#choose2  {
+	left: 950px;
+	transform: scaleX(-1);
+}
+.character {
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	top: 320px;
+	left: 100px;
+}
+#Squirtle {
+	background-image:url('../img/squirtle.png');
+	background-size: contain;
+}
+#Charmander {
+	background-image:url('../img/charmander.png');
+	background-size: contain;
+}
+.placeholder {
+	background-color: black;
+}
+.p1hover{
+	border: 2px solid red;
+}
+.p2hover {
+	border: 2px solid blue;
+}
+.bothhover {
+	border: 4px solid white;
+}
+.disable {
+	opacity: 0.5;
+}
+
+/*GAME SCREEN*/
 #background {
 	background-image: url('../img/background.png');
 	background-repeat: no-repeat;
