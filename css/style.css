@@ -78,14 +78,16 @@ h3 {
 	position: absolute;
 	top: 320px;
 	left: 100px;
+	background-size: contain;
 }
 #Squirtle {
 	background-image:url('../img/Squirtle/neutral.png');
-	background-size: contain;
 }
 #Charmander {
 	background-image:url('../img/Charmander/neutral.png');
-	background-size: contain;
+}
+#Bulbasaur {
+	background-image:url('../img/Bulbasaur/neutral.png');
 }
 .placeholder {
 	background-color: black;
@@ -239,6 +241,7 @@ h2, h4, div {
 	opacity: 0.65;
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: contain;
 }
 .evolve1 {
 	height: 400px;

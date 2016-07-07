@@ -14,11 +14,6 @@ var playable = [
 		pQuickAttack2: "url('img/Squirtle/bite2.png')",
 		pEvo1: "url('img/Squirtle/wartortle.png')",
 		pEvo2: "url('img/Squirtle/blastoise.png')",
-		html: $('#p1'),
-		model: $('.normal').eq(0),
-		evo1: $('.evolve1').eq(0),
-		evo2: $('.evolve2').eq(0),
-		// shield: $('#p1shield'),
 		health: 100,
 		nHealth: 100,
 		qDamage: 5,
@@ -46,7 +41,6 @@ var playable = [
 	}, 
 	Charmander = {
 		name: 'Charmander',
-		//position: 21,
 		pNeutral:"url('img/Charmander/neutral.png')",
 		pWalk:"url('img/Charmander/walk.png')",
 		pAttack:"url('img/Charmander/attack.png')",
@@ -56,11 +50,42 @@ var playable = [
 		pQuickAttack2: "url('img/Charmander/scratch2.png')",
 		pEvo1: "url('img/Charmander/charmeleon.png')",
 		pEvo2: "url('img/Charmander/charizard.png')",
-		html: $('#p2'),
-		model: $('.normal').eq(1),
-		evo1: $('.evolve1').eq(1),
-		evo2: $('.evolve2').eq(1),
-		// shield: $('#p2shield'),
+		health: 100,
+		nHealth: 100,
+		qDamage: 5,
+		nqDamage: 5,
+		sequence: 0,
+		damage: 5,
+		nDamage: 5,
+		attackSpeed: 20,
+		nAttackSpeed: 20,
+		attackCD: 0,
+		attack: false,
+		stun:false,
+		stunID: 0,
+		combo: 0,
+		comboId: 0,
+		attackLock: 0,
+		blockStrength: 8,
+		nBlockStrength: 8,
+		block: false,
+		blockCount: 3,
+		nBlockCount: 3,
+		blockID: 0,
+		blockID2: 0,
+		wins: 0
+	},
+	Bulbasaur = {
+		name: 'Bulbasaur',
+		pNeutral:"url('img/Bulbasaur/neutral.png')",
+		pWalk:"url('img/Bulbasaur/walk.png')",
+		pAttack:"url('img/Bulbasaur/solarbeam.png')",
+		pBlock:"url('img/Bulbasaur/block.png')",
+		pFlinch:"url('img/Bulbasaur/flinch.png')",
+		pQuickAttack1: "url('img/Bulbasaur/whip1.png')",
+		pQuickAttack2: "url('img/Bulbasaur/whip2.png')",
+		pEvo1: "url('img/Bulbasaur/ivysaur.png')",
+		pEvo2: "url('img/Bulbasaur/venusaur.png')",
 		health: 100,
 		nHealth: 100,
 		qDamage: 5,
@@ -98,6 +123,9 @@ function roundStart(round) {
 	p1.$block = $('#p1block'); p2.$block = $('#p2block');
 	p1.badge1 = $('#p1badge1'); p1.badge2 = $('#p1badge2');
 	p2.badge1 = $('#p2badge1'); p2.badge2 = $('#p2badge2');
+	p1.model = $('.normal').eq(0); p2.model = $('.normal').eq(1);
+	p1.evo1 = $('.evolve1').eq(0); p2.evo1 = $('.evolve1').eq(1);
+	p1.evo2 = $('.evolve2').eq(0); p2.evo2 = $('.evolve2').eq(1);
 	//evolution art attachment and flipping of p2 art
 	p1.evo1.css('background-image', p1.pEvo1); p1.evo2.css('background-image', p1.pEvo2);
 	p2.evo1.css('background-image', p2.pEvo1); p2.evo2.css('background-image', p2.pEvo2);
@@ -118,11 +146,11 @@ function roundStart(round) {
 	}
 	//show message
 	$message.show();
-	//signal start
+	//signal start with round message
 	setTimeout(function() {
 		$message.text('FIGHT!');
-	}, 2000);
-	//actual start
+	}, 1500);
+	//actual start with Fight message
 	setTimeout(function() {
 		$message.hide();
 		//start round timer
@@ -130,7 +158,7 @@ function roundStart(round) {
 		//enable events
 		$document.on('keydown', movement);
 		$document.on('keyup', combat);
-	}, 3000);
+	}, 2500);
 }
 
 // var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'];
