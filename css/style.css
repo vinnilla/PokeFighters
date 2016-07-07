@@ -77,11 +77,10 @@ h3 {
 	height: 150px;
 	position: absolute;
 	top: 320px;
-	left: 100px;
+	left: 350px;
 	background-size: contain;
 }
 #Squirtle {
-	left: 50px;
 	background-image:url('../img/Squirtle/neutral.png');
 }
 #Charmander {
@@ -92,8 +91,7 @@ h3 {
 	transform: scaleX(-1);
 }
 #Goku {
-	top: 120px;
-	left: 500px;
+	left: 800px;
 	background-image:url('../img/Goku/neutral.png');
 	transform: scaleX(-1);
 }

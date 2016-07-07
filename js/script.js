@@ -200,7 +200,7 @@ function setUp() {
 	charLength = characters.length-1;
 	//push divs relative to previous one
 	for (var i=1; i<charLength; i++) {
-		characters.eq(i).css('left', 450*i);
+		characters.eq(i).css('left', 350 + 150*i);
 	}
 	//add starting hover spots
 	characters.eq(0).addClass('p1hover');
