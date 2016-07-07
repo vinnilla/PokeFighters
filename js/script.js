@@ -113,54 +113,6 @@ var playable = [
 	}
 ]
 
-function roundStart(round) {
-	//set necessary data
-	p1.position = 0; p1.nPosition = 0;
-	p2.position = 18; p2.nPosition = 18;
-	//associate appropriate stat bars with players
-	p1.$hp = $('#p1hp'); p2.$hp = $('#p2hp');
-	p1.$combo = $('#p1combo'); p2.$combo = $('#p2combo');
-	p1.$block = $('#p1block'); p2.$block = $('#p2block');
-	p1.badge1 = $('#p1badge1'); p1.badge2 = $('#p1badge2');
-	p2.badge1 = $('#p2badge1'); p2.badge2 = $('#p2badge2');
-	p1.model = $('.normal').eq(0); p2.model = $('.normal').eq(1);
-	p1.evo1 = $('.evolve1').eq(0); p2.evo1 = $('.evolve1').eq(1);
-	p1.evo2 = $('.evolve2').eq(0); p2.evo2 = $('.evolve2').eq(1);
-	//evolution art attachment and flipping of p2 art
-	p1.evo1.css('background-image', p1.pEvo1); p1.evo2.css('background-image', p1.pEvo2);
-	p2.evo1.css('background-image', p2.pEvo1); p2.evo2.css('background-image', p2.pEvo2);
-	p2.evo1.css('transform', 'scaleX(-1)'); p2.evo2.css('transform', 'scaleX(-1)');
-	p2.model.css('left', '900px'); p2.model.css('transform', 'scaleX(-1)');
-
-	//show starting stats
-	neutralCSS(p1);
-	neutralCSS(p2);
-	timer = 90;
-	updateStats();
-	//change round start message
-	if (p1.wins == p2.wins && p1.wins > 0) {
-		$message.text('FINAL ROUND');
-	}
-	else {
-		$message.text('ROUND ' + round);
-	}
-	//show message
-	$message.show();
-	//signal start with round message
-	setTimeout(function() {
-		$message.text('FIGHT!');
-	}, 1500);
-	//actual start with Fight message
-	setTimeout(function() {
-		$message.hide();
-		//start round timer
-		timerID = startTimer();	
-		//enable events
-		$document.on('keydown', movement);
-		$document.on('keyup', combat);
-	}, 2500);
-}
-
 // var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px', '950px', '1000px', '1064px'];
 var x = ['0px', '50px', '100px', '150px', '200px', '250px', '300px', '350px', '400px', '450px', '500px', '550px', '600px', '650px', '700px', '750px', '800px', '850px', '900px'];
 
@@ -173,7 +125,6 @@ var $background = $('#background');
 var $timer = $('#timer');
 var $message = $('#message');
 var round = 1;
-
 var check = true;
 
 // ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
@@ -198,7 +149,8 @@ function hideInstructions() {
 	setUp();
 	$document.off('keypress', hideInstructions);
 	//listener for key down -- choose characters
-	$document.on('keydown', choose); 
+	$document.on('keydown', choose1);
+	$document.on('keydown', choose2); 
 }
 
 // ------------------------------------------CHARACTER SELECTION SCREEN------------------------------------------ //
@@ -249,25 +201,25 @@ function select(hover, player) {
 		if (characters.eq(i).hasClass(hover) && !characters.eq(i).hasClass('disable')) {
 			if (player == p1) {
 				p1 = playable[i];
+				$document.off('keydown', choose1);
 			}
 			else {
 				p2 = playable[i];
+				$document.off('keydown', choose2);
 			}
-			console.log(player);
 			characters.eq(i).addClass('disable');
 			selectionCounter++;
 		}
 	}
 	if (selectionCounter == 2) {
 		$characterSelection.hide();
-		$document.off('keydown', choose);
 		$background.show();
 		//start first round
 		roundStart(round);
 	}
 }
 
-function choose(e) {
+function choose1(e) {
 	// a
 	if (e.keyCode == 65) {
 		removeBorder('p1hover', -1);
@@ -276,6 +228,13 @@ function choose(e) {
 	if (e.keyCode == 68) {
 		removeBorder('p1hover', 1);
 	}
+	// space
+	if (e.keyCode == 32) {
+		select('p1hover', p1);
+	}
+}
+
+function choose2(e) {
 	// <-
 	if (e.keyCode == 37) {
 		removeBorder('p2hover', -1);
@@ -284,21 +243,68 @@ function choose(e) {
 	if (e.keyCode == 39) {
 		removeBorder('p2hover', 1);
 	}
-	// space
-	if (e.keyCode == 32) {
-		select('p1hover', p1);
-	}
 	// enter
 	if (e.keyCode == 13) {
 		select('p2hover', p2);
 	}
 }
 
+
+function roundStart(round) {
+	//set necessary data
+	p1.position = 0; p1.nPosition = 0;
+	p2.position = 18; p2.nPosition = 18;
+	//associate appropriate stat bars with players
+	p1.$hp = $('#p1hp'); p2.$hp = $('#p2hp');
+	p1.$combo = $('#p1combo'); p2.$combo = $('#p2combo');
+	p1.$block = $('#p1block'); p2.$block = $('#p2block');
+	p1.badge1 = $('#p1badge1'); p1.badge2 = $('#p1badge2');
+	p2.badge1 = $('#p2badge1'); p2.badge2 = $('#p2badge2');
+	p1.model = $('.normal').eq(0); p2.model = $('.normal').eq(1);
+	p1.evo1 = $('.evolve1').eq(0); p2.evo1 = $('.evolve1').eq(1);
+	p1.evo2 = $('.evolve2').eq(0); p2.evo2 = $('.evolve2').eq(1);
+	//evolution art attachment and flipping of p2 art
+	p1.evo1.css('background-image', p1.pEvo1); p1.evo2.css('background-image', p1.pEvo2);
+	p2.evo1.css('background-image', p2.pEvo1); p2.evo2.css('background-image', p2.pEvo2);
+	p2.evo1.css('transform', 'scaleX(-1)'); p2.evo2.css('transform', 'scaleX(-1)');
+	p2.model.css('left', '900px'); p2.model.css('transform', 'scaleX(-1)');
+
+	//show starting stats
+	neutralCSS(p1);
+	neutralCSS(p2);
+	timer = 90;
+	updateStats();
+	//change round start message
+	if (p1.wins == p2.wins && p1.wins > 0) {
+		$message.text('FINAL ROUND');
+	}
+	else {
+		$message.text('ROUND ' + round);
+	}
+	//show message
+	$message.show();
+	//signal start with round message
+	setTimeout(function() {
+		$message.text('FIGHT!');
+	}, 1500);
+	//actual start with Fight message
+	setTimeout(function() {
+		$message.hide();
+		//start round timer
+		timerID = startTimer();	
+		//enable events
+		$document.on('keydown', movement1);
+		$document.on('keydown', movement2);
+		$document.on('keyup', combat1);
+		$document.on('keyup', combat2);
+	}, 2500);
+}
+
 // ------------------------------------------MOVEMENT------------------------------------------ //
 
 //accept key down event and check for right button
 //check if player is attacking (shouldn't be able to move if attacking) -- if not, run testMove() (right below)
-function movement(e) {
+function movement1(e) {
 	// d
 	if (e.keyCode == 68) {
 		if (!p1.attack) {
@@ -311,8 +317,11 @@ function movement(e) {
 			testMove(p1, 'left');	
 		}
 	}
+}
+
+function movement2(e) {
 	// ->
-	else if (e.keyCode == 39) {
+	if (e.keyCode == 39) {
 		if (!p2.attack) {
 			testMove(p2, 'right');
 		}
@@ -391,15 +400,11 @@ function neutralCSS(player) {
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
 
 //check key down for fast attack, strong attack, and block
-function combat(e) {
+function combat1(e) {
 	//fast attack
 	// 1
 	if (e.keyCode == 49) {
 		attack(p1, p2, 'quick');
-	}
-	// ,
-	if (e.keyCode == 188) {
-		attack(p2, p1, 'quick');
 	}
 
 	//strong attack
@@ -407,16 +412,25 @@ function combat(e) {
 	if (e.keyCode == 50) {
 		attack(p1, p2, 'strong');
 	}
-	// .
-	if (e.keyCode == 190) {
-		attack(p2, p1, 'strong');
-	}
 
 	//block
 	// 3
 	if (e.keyCode == 51) {
 		block(p1);
 	}
+}
+
+function combat2(e) {
+	// ,
+	if (e.keyCode == 188) {
+		attack(p2, p1, 'quick');
+	}
+
+	// .
+	if (e.keyCode == 190) {
+		attack(p2, p1, 'strong');
+	}
+
 	// /
 	if (e.keyCode == 191) {
 		block(p2);	
@@ -490,6 +504,8 @@ function multipleHit(aggressor, defender, time) {
 		updateStats();
 		if (counter <= 0) {
 			clearInterval(id);
+			aggressor.combo++; //add to combo only after last tick
+			updateStats();
 			knockOut(aggressor, defender); //check KO after attack animation ends
 		}
 	}, time*aggressor.attackSpeed/3)
@@ -562,9 +578,9 @@ function attack(aggressor, defender, type){
 					}
 					else {//fast
 						defender.health -= aggressor.qDamage;
+						//combo tracking -- only iterate combo if attack is not blocked
+						aggressor.combo++;
 					}
-					//combo tracking -- only iterate combo if attack is not blocked
-					aggressor.combo++;
 					//taking damage will reset combo
 					defender.combo = 0;
 					//hide defender evolution art
@@ -715,13 +731,12 @@ function updateStats() {
 	p2.$block.css('left', 850 + 100*(p2.nBlockCount - p2.blockCount));
 }
 
-
-
-
 function roundEnd(p1, p2, winner) {
 	//remove event listeners
-	$document.off('keydown', movement);
-	$document.off('keyup', combat);
+	$document.off('keydown', movement1);
+	$document.off('keydown', movement2);
+	$document.off('keyup', combat1);
+	$document.off('keyup', combat2);
 	var tempString = " Wins Round " + round + "!";
 	//hide evolution
 	p1.evo1.hide();
