@@ -1,3 +1,5 @@
+$(document).ready(function() {
+
 //create players
 var playable = [
 
@@ -746,3 +748,5 @@ function roundEnd(p1, p2, winner) {
 		roundStart(round);
 	},3000);
 }
+
+});//end of .ready()
