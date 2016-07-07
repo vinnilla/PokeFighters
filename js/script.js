@@ -256,6 +256,7 @@ function select(hover, player) {
 		}
 	}
 	if (selectionCounter == 2) {
+		preloadImages(p1, p2);
 		setTimeout(function() {
 			$characterSelection.hide();
 			$background.show();
@@ -263,6 +264,19 @@ function select(hover, player) {
 			roundStart(round);
 		}, 1000)
 	}
+}
+
+function preloadImages(p1, p2) {
+	var test = $('<div>');
+	test.css('background-image', p1.pNeutral); test.css('background-image', p2.pNeutral);
+	test.css('background-image', p1.pWalk); test.css('background-image', p2.pWalk);
+	test.css('background-image', p1.pAttack); test.css('background-image', p2.pAttack);
+	test.css('background-image', p1.pBlock); test.css('background-image', p2.pBlock);
+	test.css('background-image', p1.pFlinch); test.css('background-image', p2.pFlinch);
+	test.css('background-image', p1.pQuickAttack1); test.css('background-image', p2.pQuickAttack1);
+	test.css('background-image', p1.pQuickAttack2); test.css('background-image', p2.pQuickAttack2);
+	test.css('background-image', p1.pEvo1); test.css('background-image', p2.pEvo1);
+	test.css('background-image', p1.pEvo2); test.css('background-image', p2.pEvo2);
 }
 
 function enableGoku() {
