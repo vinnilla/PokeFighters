@@ -160,6 +160,7 @@ var $characterSelection = $('#characterSelection');
 var $background = $('#background');
 var $timer = $('#timer');
 var $message = $('#message');
+var $goku = $('#Goku');
 var round = 1;
 var check = true;
 
@@ -180,6 +181,7 @@ setInterval(function() {
 $document.on('keypress', hideInstructions);
 
 function hideInstructions() {
+	$goku.hide();
 	$instructions.hide();
 	$characterSelection.show();
 	setUp();
@@ -195,23 +197,27 @@ var selectionCounter = 0;
 
 function setUp() {
 	characters = $('.character');
+	charLength = characters.length-1;
 	//push divs relative to previous one
 	for (var i=1; i<characters.length; i++) {
 		characters.eq(i).css('left', 335*i);
 	}
 	//add starting hover spots
 	characters.eq(0).addClass('p1hover');
-	characters.eq(characters.length-1).addClass('p2hover');
+	characters.eq(charLength-1).addClass('p2hover');
 }
 
 function removeBorder(testClass, value) {
 	var test = true;
-	for (var i=0; i<characters.length; i++) {
+	for (var i=0; i<charLength; i++) {
 		if (characters.eq(i).hasClass(testClass) && test) {
 			characters.removeClass(testClass);
 			//check if adding value will push selector past the end of the array
-			if (i+value == characters.length) {
+			if (i+value == charLength) {
 				characters.eq(0).addClass(testClass);
+			}
+			else if (i+value == -1) {
+				characters.eq(charLength-1).addClass(testClass);
 			}
 			else {
 				characters.eq(i+value).addClass(testClass);
@@ -225,7 +231,7 @@ function removeBorder(testClass, value) {
 
 function checkBoth() {
 	//check if both are hovering over the same div
-	for (var i=0; i<characters.length; i++) {
+	for (var i=0; i<charLength; i++) {
 		if (characters.eq(i).hasClass('p1hover') && characters.eq(i).hasClass('p2hover')) {
 			characters.eq(i).addClass('bothhover');
 		}
@@ -233,14 +239,16 @@ function checkBoth() {
 }
 
 function select(hover, player) {
-	for (var i=0; i<characters.length; i++) {
+	for (var i=0; i<charLength; i++) {
 		if (characters.eq(i).hasClass(hover) && !characters.eq(i).hasClass('disable')) {
 			if (player == p1) {
 				p1 = playable[i];
+				$('#choose1').css('background-image', p1.pNeutral);
 				$document.off('keydown', choose1);
 			}
 			else {
 				p2 = playable[i];
+				$('#choose2').css('background-image', p2.pNeutral);
 				$document.off('keydown', choose2);
 			}
 			characters.eq(i).addClass('disable');
@@ -248,10 +256,12 @@ function select(hover, player) {
 		}
 	}
 	if (selectionCounter == 2) {
-		$characterSelection.hide();
-		$background.show();
-		//start first round
-		roundStart(round);
+		setTimeout(function() {
+			$characterSelection.hide();
+			$background.show();
+			//start first round
+			roundStart(round);
+		}, 1000)
 	}
 }
 
@@ -267,6 +277,13 @@ function choose1(e) {
 	// space
 	if (e.keyCode == 32) {
 		select('p1hover', p1);
+	}
+	// secretkey : n
+	if (e.keyCode == 78) {
+		console.log('hi');
+		//set length to full array
+		charLength = characters.length;
+		$goku.show();
 	}
 }
 
