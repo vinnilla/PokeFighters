@@ -288,7 +288,7 @@ function runPreLoad(temp) {
 
 function preloadImages(array) {
 	$(array).each(function() {
-		$('<img/>')[0].src = this;
+		$('<img/>')[0].src = this.substr(5, this.length-7);
 	});
 }
 
