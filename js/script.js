@@ -164,7 +164,9 @@ var $goku = $('#Goku');
 var round = 1;
 var check = true;
 
+// ------ //
 // ------------------------------------------INSTRUCTION SCREEN------------------------------------------ //
+// ------ //
 
 //make 'Press Any Key To Start' flash in and out
 setInterval(function() {
@@ -191,7 +193,9 @@ function hideInstructions() {
 	$document.on('keydown', choose2); 
 }
 
+// ------ //
 // ------------------------------------------CHARACTER SELECTION SCREEN------------------------------------------ //
+// ------ //
 
 var selectionCounter = 0;
 
@@ -333,7 +337,9 @@ function choose2(e) {
 	}
 }
 
-
+// ------ //
+// ------------------------------------------GAME------------------------------------------ //
+// ------ //
 
 function roundStart(round) {
 	//set necessary data
@@ -386,7 +392,9 @@ function roundStart(round) {
 	}, 2500);
 }
 
+// ------ //
 // ------------------------------------------MOVEMENT------------------------------------------ //
+// ------ //
 
 //accept key down event and check for right button
 //check if player is attacking (shouldn't be able to move if attacking) -- if not, run testMove() (right below)
@@ -483,7 +491,9 @@ function neutralCSS(player) {
 	}
 }
 
+// ------ //
 // ------------------------------------------COLLISION AND COMBAT------------------------------------------ //
+// ------ //
 
 //check key down for fast attack, strong attack, and block
 function combat1(e) {
@@ -523,7 +533,9 @@ function combat2(e) {
 	}
 }
 
+// ------ //
 // ------------------------------------------ATTACKING------------------------------------------ //
+// ------ //
 
 // if true, player can attack (attack cooldown = 0 && stun = false)
 function checkStatus(player) {
@@ -696,7 +708,9 @@ function attack(aggressor, defender, type){
 	}	
 }
 
+// ------ //
 // ------------------------------------------COMBO MANAGEMENT------------------------------------------ //
+// ------ //
 
 function evolution(player) {
 	clearTimeout(player.comboID);
@@ -737,7 +751,9 @@ function evolution(player) {
 	}
 }
 
+// ------ //
 // ------------------------------------------BLOCKING------------------------------------------ //
+// ------ //
 
 function block(player) {
 	if (player.blockCount > 0 && player.attack == false) {
@@ -764,7 +780,9 @@ function block(player) {
 	}
 }
 
+// ------ //
 // ------------------------------------------ROUND END------------------------------------------ //
+// ------ //
 
 function checkTimer() {
 	if ($timer.text() == 0) {
