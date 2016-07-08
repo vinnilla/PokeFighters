@@ -196,9 +196,11 @@ function hideInstructions() {
 var selectionCounter = 0;
 
 function setUp() {
+	//collect all character divs in array
 	characters = $('.character');
+	//charLength is responsible for hiding goku
 	charLength = characters.length-1;
-	//push divs relative to previous one
+	//dynamically set positions of character divs
 	for (var i=1; i<charLength; i++) {
 		characters.eq(i).css('left', 350 + 150*i);
 	}
@@ -210,12 +212,14 @@ function setUp() {
 function removeBorder(testClass, value) {
 	var test = true;
 	for (var i=0; i<charLength; i++) {
+		//find 'selected' character
 		if (characters.eq(i).hasClass(testClass) && test) {
 			characters.removeClass(testClass);
 			//check if adding value will push selector past the end of the array
 			if (i+value == charLength) {
 				characters.eq(0).addClass(testClass);
 			}
+			//check if adding value will push selector past the beginning of the array
 			else if (i+value == -1) {
 				characters.eq(charLength-1).addClass(testClass);
 			}
@@ -226,7 +230,8 @@ function removeBorder(testClass, value) {
 		}
 	}
 	characters.removeClass('bothhover');
-	checkBoth();	
+	//check if both selectors are hovering over the same char and change border css
+	checkBoth();
 }
 
 function checkBoth() {
@@ -240,10 +245,14 @@ function checkBoth() {
 
 function select(hover, player) {
 	for (var i=0; i<charLength; i++) {
+		//test if hovering and not disabled
 		if (characters.eq(i).hasClass(hover) && !characters.eq(i).hasClass('disable')) {
 			if (player == p1) {
+				//store hard data in player variable
 				p1 = playable[i];
+				//show character selected
 				$('#choose1').css('background-image', p1.pNeutral);
+				//remove event listener
 				$document.off('keydown', choose1);
 			}
 			else {
@@ -251,12 +260,13 @@ function select(hover, player) {
 				$('#choose2').css('background-image', p2.pNeutral);
 				$document.off('keydown', choose2);
 			}
+			//change css of selected div
 			characters.eq(i).addClass('disable');
 			selectionCounter++;
 		}
 	}
 	if (selectionCounter == 2) {
-		preloadImages(p1, p2);
+		// preloadImages(p1, p2);
 		setTimeout(function() {
 			$characterSelection.hide();
 			$background.show();
@@ -266,18 +276,18 @@ function select(hover, player) {
 	}
 }
 
-function preloadImages(p1, p2) {
-	var test = $('<div>');
-	test.css('background-image', p1.pNeutral); test.css('background-image', p2.pNeutral);
-	test.css('background-image', p1.pWalk); test.css('background-image', p2.pWalk);
-	test.css('background-image', p1.pAttack); test.css('background-image', p2.pAttack);
-	test.css('background-image', p1.pBlock); test.css('background-image', p2.pBlock);
-	test.css('background-image', p1.pFlinch); test.css('background-image', p2.pFlinch);
-	test.css('background-image', p1.pQuickAttack1); test.css('background-image', p2.pQuickAttack1);
-	test.css('background-image', p1.pQuickAttack2); test.css('background-image', p2.pQuickAttack2);
-	test.css('background-image', p1.pEvo1); test.css('background-image', p2.pEvo1);
-	test.css('background-image', p1.pEvo2); test.css('background-image', p2.pEvo2);
-}
+// function preloadImages(p1, p2) {
+// 	var test = $('<div>');
+// 	test.css('background-image', p1.pNeutral); test.css('background-image', p2.pNeutral);
+// 	test.css('background-image', p1.pWalk); test.css('background-image', p2.pWalk);
+// 	test.css('background-image', p1.pAttack); test.css('background-image', p2.pAttack);
+// 	test.css('background-image', p1.pBlock); test.css('background-image', p2.pBlock);
+// 	test.css('background-image', p1.pFlinch); test.css('background-image', p2.pFlinch);
+// 	test.css('background-image', p1.pQuickAttack1); test.css('background-image', p2.pQuickAttack1);
+// 	test.css('background-image', p1.pQuickAttack2); test.css('background-image', p2.pQuickAttack2);
+// 	test.css('background-image', p1.pEvo1); test.css('background-image', p2.pEvo1);
+// 	test.css('background-image', p1.pEvo2); test.css('background-image', p2.pEvo2);
+// }
 
 function enableGoku() {
 	//set length to full array
