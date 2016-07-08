@@ -254,6 +254,7 @@ function select(hover, player) {
 			if (player == p1) {
 				//store hard data in player variable
 				p1 = playable[i];
+				runPreLoad(playable[i]);
 				//show character selected
 				$('#choose1').css('background-image', p1.pNeutral);
 				//remove event listener
@@ -261,6 +262,7 @@ function select(hover, player) {
 			}
 			else {
 				p2 = playable[i];
+				runPreLoad(playable[i]);
 				$('#choose2').css('background-image', p2.pNeutral);
 				$document.off('keydown', choose2);
 			}
@@ -270,7 +272,6 @@ function select(hover, player) {
 		}
 	}
 	if (selectionCounter == 2) {
-		// preloadImages(p1, p2);
 		setTimeout(function() {
 			$characterSelection.hide();
 			$background.show();
@@ -278,6 +279,17 @@ function select(hover, player) {
 			roundStart(round);
 		}, 1000)
 	}
+}
+
+function runPreLoad(temp) {
+	preloadImages([temp.pNeutral, temp.pWalk, temp.pQuickAttack1, temp.pQuickAttack2, temp.pAttack,
+		temp.pBlock, temp.pFlinch, temp.pEvo1, temp.pEvo2]);
+}
+
+function preloadImages(array) {
+	$(array).each(function() {
+		$('<img/>')[0].src = this;
+	});
 }
 
 // function preloadImages(p1, p2) {
