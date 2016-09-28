@@ -1,9 +1,9 @@
-#PokeFighters
+#[PokeFighters](https://vinnilla.github.io/PokeFighters/)
 
 ![Image of Blastoise](img/Squirtle/blastoise.png)
 ![Image of Charizard](img/Charmander/charizard.png)
 
-https://vinnilla.github.io/PokeFighters/
+![Image of Game](http://i.imgur.com/TUAQHe1.png)
 
 ##Game Dev Approach:
 * All stats are hard coded into objects - so far only two objects (pokemon) exist. More will be added if time permits and then these objects will be placed in an array for organized storage
